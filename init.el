@@ -88,6 +88,7 @@
      chrome
      finance
      pdf-tools
+     deft
      pandoc     ; Universal document converter
      ranger     ; Dired enhancement
      (shell :variables
@@ -505,6 +506,9 @@
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq neo-vc-integration nil)
 
+  ;; Deft ;;
+  (setq deft-extensions '("org" "md" "txt"))       ; add more to recognize more file formats.
+  (setq deft-directory "~/Google Drive/Org/Notes")
 
   ;; EWW ;;
   (defvar eww-disable-colorize t)

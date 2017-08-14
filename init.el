@@ -11,7 +11,7 @@
 
    dotspacemacs-configuration-layers
    '(
-     ;; Programming Languages ;;
+     ;; Programming Languages
      ruby
      ruby-on-rails
      python
@@ -35,19 +35,19 @@
      sql
      ipython-notebook
 
-     ;; Languages ;;
+     ;; Languages
      chinese
      ; japanese
 
-     ;; Highlighting ;;
+     ;; Highlighting
      systemd
 
-     ;; Version Control System ;;
+     ;; Version Control System
      version-control
      git
      github
 
-     ;; Functions ;;
+     ;; Functions
      helm
      (auto-completion :variables
                       auto-completion-enable-sort-by-usage t
@@ -63,7 +63,7 @@
      spacemacs-layouts
 
 
-     ;; Org ;;
+     ;; Org
      (org :variables
           org-enable-github-support t
           org-enable-org-journal-support t
@@ -75,13 +75,13 @@
           org-projectile-file "TODOs.org"
           )
 
-     ;; Mail ;;
+     ;; Mail
      (mu4e :variables
            mu4e-installation-path "/usr/share/emacs/site-lisp"
            mu4e-maildir "/home/zaen/Mail"
            )
 
-     ;; Tools ;;
+     ;; Tools
      games
      twitter
      slack
@@ -135,20 +135,10 @@
       :config (spaceline-all-the-icons-theme)
               (spaceline-toggle-all-the-icons-bookmark-on)
       )
-     ;; (epc :location (recipe
-     ;;                  :fetcher github
-     ;;                  :repo "kiwanami/emacs-epc"))
-     ;; (epcs :location (recipe
-     ;;                       :fetcher github
-     ;;                       :repo "kiwanami/emacs-epc"))
-     ;; (webkit :location (recipe
-     ;;                     :fetcher github
-     ;;                     :repo "martyr-deepin/emacs-webkit")))
-
      )
-   dotspacemacs-frozen-packages '()   ; No update
+   dotspacemacs-frozen-packages '()                     ; No update
 
-   dotspacemacs-excluded-packages '(vi-tilde-fringe) ; Excluded from layer
+   dotspacemacs-excluded-packages '(vi-tilde-fringe)    ; Excluded from layer
 
    dotspacemacs-install-packages 'used-only
 
@@ -163,9 +153,6 @@
 
    dotspacemacs-check-for-update nil
 
-   ;; If non-nil, a form that evaluates to a package directory. For example, to
-   ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'.
    dotspacemacs-elpa-subdirectory nil
 
    dotspacemacs-editing-style 'hybrid
@@ -215,8 +202,6 @@
 
    dotspacemacs-major-mode-leader-key ","
 
-   ;; Major mode leader key accessible in `emacs state' and `insert state'.
-   ;; (default "C-M-m")
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
 
    ;; These variables control whether separate commands are bound in the GUI to
@@ -251,42 +236,24 @@
    dotspacemacs-auto-resume-layouts t
 
 
-   dotspacemacs-large-file-size 1 ; in MB
+   dotspacemacs-large-file-size 1 		             ; in MB
 
-   ;; Location where to auto-save files. Possible values are `original' to
-   ;; auto-save the file in-place, `cache' to auto-save the file to another
-   ;; file stored in the cache directory and `nil' to disable auto-saving.
-   ;; (default 'cache)
    dotspacemacs-auto-save-file-location 'cache
 
-   ;; Maximum number of rollback slots to keep in the cache. (default 5)
-   dotspacemacs-max-rollback-slots 5
+   dotspacemacs-max-rollback-slots 20
 
 
    ;; Helm;;
 
-   ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
    dotspacemacs-helm-resize nil
 
-   ;; if non nil, the helm header is hidden when there is only one source.
-   ;; (default nil)
    dotspacemacs-helm-no-header nil
 
    dotspacemacs-helm-position 'bottom
 
-   ;; Controls fuzzy matching in helm. If set to `always', force fuzzy matching
-   ;; in all non-asynchronous sources. If set to `source', preserve individual
-   ;; source settings. Else, disable fuzzy matching in all sources.
-   ;; (default 'always)
    dotspacemacs-helm-use-fuzzy 'always
 
-
-   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
-   ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-transient-state nil
-
-
-   ;; Which-key ;;
+   dotspacemacs-enable-paste-transient-state nil   ; C-j, C-k replace the text with older/newer yanks.
 
    dotspacemacs-which-key-delay 0.4
 
@@ -294,7 +261,6 @@
 
    dotspacemacs-loading-progress-bar t
 
-   ;; Frame ;;
    dotspacemacs-fullscreen-at-startup nil
 
    dotspacemacs-fullscreen-use-non-native nil
@@ -313,8 +279,6 @@
 
    dotspacemacs-smooth-scrolling t
 
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
    dotspacemacs-line-numbers  '(:relative nil
                                 :disabled-for-modes dired-mode
                                                     doc-view-mode
@@ -327,29 +291,17 @@
 
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
-   ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
 
-   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
-   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis nil
+   dotspacemacs-smart-closing-parenthesis t
 
-   ;; Select a scope to highlight delimiters. Possible values are `any',
-   ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
-   ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
 
    dotspacemacs-persistent-server t
 
-   ;; List of search tool executable names. Spacemacs uses the first installed
-   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   ;; (default '("ag" "pt" "ack" "grep"))
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
 
-   ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
+   dotspacemacs-default-package-repository nil  ; Not used for now.
 
    dotspacemacs-whitespace-cleanup 'trailing
    ))
@@ -659,7 +611,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (spaceline-all-the-icons per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (deft spaceline-all-the-icons per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

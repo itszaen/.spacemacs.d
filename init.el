@@ -138,7 +138,7 @@
 
    dotspacemacs-install-packages 'used-only
 
-  ))
+  )) ;layers & setq
 
 (defun dotspacemacs/init ()
   (setq-default
@@ -287,7 +287,7 @@
    dotspacemacs-default-package-repository nil  ; Not used for now.
 
    dotspacemacs-whitespace-cleanup 'trailing
-   ))
+   )) ;init & setq
 
 (defun dotspacemacs/user-init ()
 
@@ -331,7 +331,7 @@
     (spaceline-all-the-icons-theme)
     (spaceline-toggle-all-the-icons-bookmark-on)
   	)
-  )
+  ) ; user-init
 
 (defun dotspacemacs/user-config ()
 
@@ -472,7 +472,7 @@
   (setq shr-external-browser 'browse-url-generic)
 
 
-  ;;;; Layouts
+ ;;;; Layouts
 
   (spacemacs|define-custom-layout "@ERC"
   :binding "E"
@@ -486,36 +486,19 @@
     (add-hook 'erc-mode-hook #'spacemacs-layouts/add-erc-buffer-to-persp)
     ;; Start ERC
     (call-interactively 'erc)
-    ))
+    )
+  )
 
   (spacemacs|define-custom-layout "@Notebook"
   :binding "n"
   :body
   (progn
-   ; (defun disable-current-theme ()
-    ;  (disable-theme spacemacs--cur-theme))
-  (disable-theme spacemacs--cur-theme)
-  ;(advice-add 'load-theme :before #'disable-current-theme)
-  (spacemacs/load-theme 'leuven)
-  ;Wrong number of arguments: (lambda nil (disable-theme spacemacs--cur-theme)),
-  ;(helm-themes--load-theme ("leuven"))
-  (find-file "~/Google Drive/Notebooks/notebook.txt")
-  (org-mode)
-  (neotree-show)
-  ))
-
-  (spacemacs|define-custom-layout "@AV"
-  :binding "a"
-  :body
-
+    (find-file "~/Google Drive/Notebooks/notebook.txt")
+    (org-mode)
+    (neotree-show)
+  	)
   )
 
-  (spacemacs|define-custom-layout "@Monitor"
-  :binding "m"
-  :body
-
-
-    )
 
   ;;;; Theme per layout
 
@@ -556,7 +539,7 @@
    ;;          (:modes . (org-mode)))
    ;;         ))
 
-  ) ; User-config
+  ) ; user-config
 
 
 

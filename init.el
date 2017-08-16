@@ -1,5 +1,6 @@
 (defun dotspacemacs/layers ()
   (setq-default
+
    dotspacemacs-distribution 'spacemacs
 
    dotspacemacs-enable-lazy-installation 'unused
@@ -10,7 +11,6 @@
 
    dotspacemacs-configuration-layers
    '(
-     ;; Programming Languages
      ruby
      ruby-on-rails
      python
@@ -27,60 +27,27 @@
      html
      javascript
      shell-scripts
-     (c-c++ :variables
-            c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t)
+     (c-c++             :variables
+                        c-c++-default-mode-for-headers 'c++-mode
+                        c-c++-enable-clang-support t)
      rust
      sql
      ipython-notebook
-
-     ;; Languages
-     chinese
-     ; japanese
-
-     ;; Highlighting
      systemd
 
-     ;; Version Control System
+     chinese
+     ;japanese
+
+     helm
      version-control
      git
      github
-
-     ;; Functions
-     helm
-     (auto-completion :variables
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-enable-snippets-in-popup t)
      spell-checking
      syntax-checking
      better-defaults
-     (colors :variables
-             color-colorize-identifiers 'all
-             colors-enable-nyan-cat-progress-bar t)
      themes-megapack
      theming
      spacemacs-layouts
-
-
-     ;; Org
-     (org :variables
-          org-enable-github-support t
-          org-enable-org-journal-support t
-          org-journal-dir "~/Google Drive/Org/Journal-Desktop/"
-          org-journal-file-format "%Y-%n-%d"
-          org-enable-bootstrap-support t
-          org-enable-reveal-js-support t
-          org-want-todo-bindings t
-          org-projectile-file "TODOs.org"
-          )
-
-     ;; Mail
-     (mu4e :variables
-           mu4e-installation-path "/usr/share/emacs/site-lisp"
-           mu4e-maildir "/home/zaen/Mail"
-           )
-
-     ;; Tools
      games
      twitter
      slack
@@ -89,37 +56,51 @@
      pdf-tools
      deft
      pandoc     ; Universal document converter
-     (shell :variables
-            shell-default-shell 'multi-term
-            )
-     speed-reading
-     (wakatime :variables
-               wakatime-api-key "2db0c3a9-0164-447c-83ed-57bde0304722"
-               wakatime-cli-path "/usr/bin/wakatime"
-               )
-     (erc :variables
-          erc-server-list
-          '("irc.freenode.net"
-            :port "6667"
-            :nick "zaen"
-            )
-          )
-
-
      emoji
-     (ranger :variables
-             ranger-show-preview t
-             )
      media
      gnus
-    )
+     speed-reading
+     (colors             :variables
+                         color-colorize-identifiers 'all
+                         colors-enable-nyan-cat-progress-bar t)
+     (auto-completion    :variables
+                         auto-completion-enable-sort-by-usage t
+                         auto-completion-enable-snippets-in-popup t)
+     (ranger             :variables
+                         ranger-show-preview t)
+     (shell              :variables
+                         shell-default-shell 'multi-term)
+     (wakatime           :variables
+                         wakatime-api-key "2db0c3a9-0164-447c-83ed-57bde0304722"
+                         wakatime-cli-path "/usr/bin/wakatime")
+     (erc                :variables
+                         erc-server-list
+                         '("irc.freenode.net"
+                           :port "6667"
+                           :nick "zaen"
+                           ))
+     (org                :variables
+                         org-enable-github-support t
+                         org-enable-org-journal-support t
+                         org-journal-dir "~/Google Drive/Org/Journal-Desktop/"
+                         org-journal-file-format "%Y-%n-%d"
+                         org-enable-bootstrap-support t
+                         org-enable-reveal-js-support t
+                         org-want-todo-bindings t
+                         org-projectile-file "TODOs.org")
+     (mu4e               :variables
+                         mu4e-installation-path "/usr/share/emacs/site-lisp"
+                         mu4e-maildir "/home/zaen/Mail")
+    ) ; configuration-layers
 
    dotspacemacs-additional-packages
    '(
      mozc
      ac-mozc     ; Auto-completion
      mozc-popup
+     mozc-cursor-color
      multi-term
+     gitter
      cnfonts
      org-notebook
      color-theme-buffer-local
@@ -131,9 +112,14 @@
      spaceline-all-the-icons
      )
 
-   dotspacemacs-frozen-packages '()                     ; No update
+   dotspacemacs-frozen-packages          ; No update
+   '(
+     )
 
-   dotspacemacs-excluded-packages '(vi-tilde-fringe)    ; Excluded from layer
+   dotspacemacs-excluded-packages        ; Excluded from layers
+   '(
+     vi-tilde-fringe
+     )
 
    dotspacemacs-install-packages 'used-only
 
@@ -154,9 +140,6 @@
 
    dotspacemacs-verbose-loading t
 
-
-   ;; Startup screen ;;
-
    dotspacemacs-startup-banner 'official
 
    ;; `recents' `bookmarks' `projects' `agenda' `todos'
@@ -169,7 +152,6 @@
                                 )
 
    dotspacemacs-startup-buffer-responsive t
-
 
    dotspacemacs-scratch-mode 'text-mode
 
@@ -290,12 +272,8 @@
 
 (defun dotspacemacs/user-init ()
 
-  ;; Custom Paths
-   (add-to-list 'load-path "/home/zaen/Google Drive/Documents/Emacs/lisp/")
-   (let ((default-directory "/home/zaen/Google Drive/Documents/Emacs/lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
-
   ;;; Components
+
   ;; Mu4e
   (setq
    mu4e-get-mail-command "offlineimap"
@@ -333,6 +311,64 @@
   ) ; user-init
 
 (defun dotspacemacs/user-config ()
+  ;;; Keybindings
+
+  ;(defvar layout-leader-map (make-sparse-keymap))
+
+  ;; Switch layout bound to SPC-*
+  (spacemacs/set-leader-keys (kbd "SPC 1") 'spacemacs/persp-switch-to-1)
+  (spacemacs/set-leader-keys (kbd "SPC 2") 'spacemacs/persp-switch-to-2)
+  (spacemacs/set-leader-keys (kbd "SPC 3") 'spacemacs/persp-switch-to-3)
+  (spacemacs/set-leader-keys (kbd "SPC 4") 'spacemacs/persp-switch-to-4)
+  (spacemacs/set-leader-keys (kbd "SPC 5") 'spacemacs/persp-switch-to-5)
+  (spacemacs/set-leader-keys (kbd "SPC 6") 'spacemacs/persp-switch-to-6)
+  (spacemacs/set-leader-keys (kbd "SPC 7") 'spacemacs/persp-switch-to-7)
+  (spacemacs/set-leader-keys (kbd "SPC 8") 'spacemacs/persp-switch-to-8)
+  (spacemacs/set-leader-keys (kbd "SPC 9") 'spacemacs/persp-switch-to-9)
+
+  ;; Switch workspace bound to g-*
+  (define-key evil-normal-state-map (kbd "g 1") 'eyebrowse-switch-to-window-config-1)
+  (define-key evil-normal-state-map (kbd "g 2") 'eyebrowse-switch-to-window-config-2)
+  (define-key evil-normal-state-map (kbd "g 3") 'eyebrowse-switch-to-window-config-3)
+  (define-key evil-normal-state-map (kbd "g 4") 'eyebrowse-switch-to-window-config-4)
+  (define-key evil-normal-state-map (kbd "g 5") 'eyebrowse-switch-to-window-config-5)
+  (define-key evil-normal-state-map (kbd "g 6") 'eyebrowse-switch-to-window-config-6)
+  (define-key evil-normal-state-map (kbd "g 7") 'eyebrowse-switch-to-window-config-7)
+  (define-key evil-normal-state-map (kbd "g 8") 'eyebrowse-switch-to-window-config-8)
+  (define-key evil-normal-state-map (kbd "g 9") 'eyebrowse-switch-to-window-config-9)
+  ; Magit-mode-map
+  (define-key magit-mode-map (kbd "g 1") 'eyebrowse-switch-to-window-config-1)
+  (define-key magit-mode-map (kbd "g 2") 'eyebrowse-switch-to-window-config-2)
+  (define-key magit-mode-map (kbd "g 3") 'eyebrowse-switch-to-window-config-3)
+  (define-key magit-mode-map (kbd "g 4") 'eyebrowse-switch-to-window-config-4)
+  (define-key magit-mode-map (kbd "g 5") 'eyebrowse-switch-to-window-config-5)
+  (define-key magit-mode-map (kbd "g 6") 'eyebrowse-switch-to-window-config-6)
+  (define-key magit-mode-map (kbd "g 7") 'eyebrowse-switch-to-window-config-7)
+  (define-key magit-mode-map (kbd "g 8") 'eyebrowse-switch-to-window-config-8)
+  (define-key magit-mode-map (kbd "g 9") 'eyebrowse-switch-to-window-config-9)
+
+  ;; Switch window bound to *
+  (define-key evil-normal-state-map "1" 'winum-select-window-1)
+  (define-key evil-normal-state-map "2" 'winum-select-window-2)
+  (define-key evil-normal-state-map "3" 'winum-select-window-3)
+  (define-key evil-normal-state-map "4" 'winum-select-window-4)
+  (define-key evil-normal-state-map "5" 'winum-select-window-5)
+  (define-key evil-normal-state-map "6" 'winum-select-window-6)
+  (define-key evil-normal-state-map "7" 'winum-select-window-7)
+  (define-key evil-normal-state-map "8" 'winum-select-window-8)
+  (define-key evil-normal-state-map "9" 'winum-select-window-9)
+  ; Magit-mode-map
+  (define-key magit-mode-map "1" 'winum-select-window-1)
+  (define-key magit-mode-map "2" 'winum-select-window-2)
+  (define-key magit-mode-map "3" 'winum-select-window-3)
+  (define-key magit-mode-map "4" 'winum-select-window-4)
+  (define-key magit-mode-map "5" 'winum-select-window-5)
+  (define-key magit-mode-map "6" 'winum-select-window-6)
+  (define-key magit-mode-map "7" 'winum-select-window-7)
+  (define-key magit-mode-map "8" 'winum-select-window-8)
+  (define-key magit-mode-map "9" 'winum-select-window-9)
+
+
 
   ;;; Faces, fonts, fontsets
 
@@ -369,7 +405,7 @@
   ;; Default Browser
   (setq browse-url-browser-function 'browse-url-chromium)
 
-  ;; DEFAULT FRAME
+  ;; Default frame
   (add-to-list 'default-frame-alist '(fullscreen . maximized)) ; Maximized by default
   (setq frame-resize-pixelwise t)                              ; Fix the gap
 
@@ -391,43 +427,56 @@
       (setq command-error-function #'my-command-error-function)
 
   ;; Diminish spaceline indications
-      (spacemacs|diminish holy-mode)
-      (spacemacs|diminish hybrid-mode)
-      (spacemacs|diminish which-key-mode)
-      (spacemacs|diminish auto-completion-mode)
-      (spacemacs|diminish evil-mc-mode)
-      (spacemacs|diminish helm-gtags-mode)
-      (spacemacs|diminish ggtags-mode)
-      (spacemacs|diminish wakatime-mode)
-      (with-eval-after-load 'emoji-cheat-sheet-plus
-        (diminish 'emoji-cheat-sheet-plus-display-mode))
-      (with-eval-after-load 'racer
-        (diminish 'racer-mode))
-      (with-eval-after-load 'command-log-mode
-        (diminish 'command-log-mode))
+  (spacemacs|diminish holy-mode)
+  (spacemacs|diminish hybrid-mode)
+  (spacemacs|diminish which-key-mode)
+  (spacemacs|diminish auto-completion-mode)
+  (spacemacs|diminish evil-mc-mode)
+  (spacemacs|diminish helm-gtags-mode)
+  (spacemacs|diminish ggtags-mode)
+  (spacemacs|diminish wakatime-mode)
+  (with-eval-after-load 'emoji-cheat-sheet-plus
+    (diminish 'emoji-cheat-sheet-plus-display-mode))
+  (with-eval-after-load 'racer
+    (diminish 'racer-mode))
+  (with-eval-after-load 'command-log-mode
+    (diminish 'command-log-mode))
 
   ;;; Components
-
-  ;; Mozc       Japanese Input System
-  (setq mozc-color "blue")
-  ;(global-set-key (kbd "C-j") 'toggle-input-method) ; Ctrl-j starts mozc
+  (global-set-key (kbd "C-j") 'mozc-mode)
+  (setq mozc-cursor-color-alist '((direct        . "blue")
+                                  (hiragana      . "green")
+                                  (full-katakana . "goldenrod")
+                                  (half-ascii    . "dark orchid")
+                                  (full-ascii    . "orchid")
+                                  (half-katakana . "dark goldenrod")))
   (setq quail-japanese-use-double-n t)    ; Double n
-  (setq mozc-candidate-style 'overlay)      ; Mozc candidate in popup
+  (setq mozc-candidate-style 'overlay)
 
   ;; Terminal
   (setq explicit-shell-file-name "/bin/zsh")         ; Set default to zsh
   (setq multi-term-program explicit-shell-file-name) ; Multi-term = zsh
 
-  ;; Twitter
-  (setq twittering-reverse-mode t)     ; Display tweets from the bottom of the buffer
-  (setq twittering-use-icon-storage t) ; Store the icons at .twittering-mode-icon.gz
 
   ;; Org
   (with-eval-after-load 'org
     (setq spaceline-org-clock-p t)
   )
+  ;; Deft  Note taking mode
+  (setq deft-extensions '("org" "md" "txt"))        ; add more to recognize more file formats.
+  (setq deft-directory "~/Google Drive/Org/Notes")
+
+
+  ;; Twitter
+  (setq twittering-reverse-mode t)     ; Display tweets from the bottom of the buffer
+  (setq twittering-use-icon-storage t) ; Store the icons at .twittering-mode-icon.gz
 
   ;; ERC        Emacs Internet Relay Chat Client
+
+  ;; Gitter
+  (setq gitter-token "b82daddc46dc27391e313e8dc6dcc07d6c079ccf")
+
+
 
   ;; EMMS       Emacs Multimedia System
   (setq emms-source-file-default-directory "~/Music/")
@@ -446,9 +495,7 @@
   ;; Ranger
 
 
-  ;; Deft  Note taking mode
-  (setq deft-extensions '("org" "md" "txt"))        ; add more to recognize more file formats.
-  (setq deft-directory "~/Google Drive/Org/Notes")
+
 
   ;; EWW   Emacs Web Browser
   (defvar eww-disable-colorize t)
@@ -473,8 +520,8 @@
 
  ;;;; Layouts
 
-  (spacemacs|define-custom-layout "@ERC"
-  :binding "E"
+  (spacemacs|define-custom-layout "@Chats"
+  :binding "C"
   :body
   (progn
     ;; hook to add all ERC buffers to the layout
@@ -565,20 +612,32 @@
  ) ; custom-set-faces
 
 (defun dotspacemacs/emacs-custom-settings ()
-  (custom-set-variables
-   '(ansi-color-names-vector
-     ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
-   '(custom-safe-themes
-     (quote
-      ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
-   '(describe-char-unidata-list
-     (quote
-      (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
-   '(evil-want-Y-yank-to-eol nil)
-   '(package-selected-packages
-     (quote
-      (helm-emms emms-state deft spaceline-all-the-icons per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
-   '(wakatime-python-bin nil))
-  (custom-set-faces
-   '(default ((t (:foreground "#eee" :background "#011827")) (((class color) (min-colors 256)) (:foreground "#eee" :background "black")))))
-  ) ; emacs-custom-settings
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(custom-safe-themes
+   (quote
+    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(describe-char-unidata-list
+   (quote
+    (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(package-selected-packages
+   (quote
+    (gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(wakatime-python-bin nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#eee" :background "#011827")) (((class color) (min-colors 256)) (:foreground "#eee" :background "black")))))
+) ; emacs-custom-settings

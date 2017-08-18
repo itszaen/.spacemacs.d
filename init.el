@@ -306,13 +306,28 @@
     )
 
   ;; Spaceline
+  ; Display current time in powerline
   (spacemacs|use-package-add-hook spaceline
-    :pre-config
+    :post-config
+    (spaceline-define-segment date-time-segment
+      (shell-command-to-string "echo -n $(date +%k:%M--%m-%d)")
+      )
+  	)
+  ; All the icons
+  (with-eval-after-load 'spaceline
+    (spacemacs|use-package-add-hook spaceline-all-the-icons
+      :post-init
     (spaceline-all-the-icons-theme)
     (spaceline-toggle-all-the-icons-bookmark-on)
-  	)
+    (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
+    (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
+    (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
+    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
+    (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+    )
+  )
 
-  ;;
+  ;; No '/' in neotree
   (spacemacs|use-package-add-hook neotree
     :post-config
     (defun neo-buffer--insert-dir-entry (node depth expanded)
@@ -332,6 +347,7 @@
       (neo-buffer--newline-and-begin)))
   )
   ) ; user-init
+
 
 (defun dotspacemacs/user-config ()
   ;;; Keybindings
@@ -460,12 +476,6 @@
   ;                                   time-string)))))
   ;(minibuffer-line-mode)
 
-  ;; Display current time in powerline
-  (spaceline-define-segment date-time-segment
-    (shell-command-to-string "echo -n $(date +%k:%M--%m-%d)")
-    )
-
-  ;; No \ in neotree
 
   ;; Open *.foo in foo-mode
   ;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
@@ -540,7 +550,7 @@
   (setq powerline-default-separator 'bar)
 
   ;; Neotree  File tree plugin
-  (setq neo-theme 'icon)
+  (setq neo-theme 'icons)
   (setq neo-smart-open t)
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq neo-vc-integration nil)

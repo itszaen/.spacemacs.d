@@ -84,6 +84,7 @@
                          org-enable-org-journal-support t
                          org-journal-dir "~/Google Drive/Org/Journal-Desktop/"
                          org-journal-file-format "%Y-%n-%d"
+                         org-display-custom-times t
                          org-enable-bootstrap-support t
                          org-enable-reveal-js-support t
                          org-want-todo-bindings t
@@ -103,6 +104,7 @@
      gitter
      cnfonts
      org-notebook
+     org-pomodoro
      color-theme-buffer-local
      load-theme-buffer-local
      per-buffer-theme
@@ -110,6 +112,7 @@
      concurrent
      all-the-icons
      spaceline-all-the-icons
+     minibuffer-line
      )
 
    dotspacemacs-frozen-packages          ; No update
@@ -308,6 +311,26 @@
     (spaceline-all-the-icons-theme)
     (spaceline-toggle-all-the-icons-bookmark-on)
   	)
+
+  ;;
+  (spacemacs|use-package-add-hook neotree
+    :post-config
+    (defun neo-buffer--insert-dir-entry (node depth expanded)
+    (let ((node-short-name (neo-path--file-short-name node)))
+      (insert-char ?\s (* (- depth 1) 2)) ; indent
+      (when (memq 'char neo-vc-integration)
+        (insert-char ?\s 2))
+      (neo-buffer--insert-fold-symbol
+       (if expanded 'open 'close) node)
+      (insert-button node-short-name ;; (concat node-short-name "/")
+                     'follow-link t
+                     'face neo-dir-link-face
+                     'neo-full-path node
+                     'keymap neotree-dir-button-keymap
+                     'help-echo (neo-buffer--help-echo-message node-short-name))
+      (neo-buffer--node-list-set nil node)
+      (neo-buffer--newline-and-begin)))
+  )
   ) ; user-init
 
 (defun dotspacemacs/user-config ()
@@ -348,6 +371,7 @@
   ;; (define-key magit-normal-state-map (kbd "g 9") 'eyebrowse-switch-to-window-config-9)
 
   ;; Switch window bound to *
+  (define-key evil-normal-state-map "0" 'winum-select-window-0)
   (define-key evil-normal-state-map "1" 'winum-select-window-1)
   (define-key evil-normal-state-map "2" 'winum-select-window-2)
   (define-key evil-normal-state-map "3" 'winum-select-window-3)
@@ -382,6 +406,14 @@
   (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
                       :background "aquamarine" :foreground "black")
 
+  ;; Org font
+  (defun org-face-mode ()
+    (interactive)
+    (setq buffer-face-mode-face '(:family "Source Han Sans Pro" :height normal :width normal))
+    (buffer-face-mode))
+  (add-hook 'org-mode-hook 'org-face-mode)
+
+
   ;; Fonts
   ;; (set-fontset-font t 'japanese-jisx0208 (font-spec
   ;;                                         :name "Source Han Sans JP Light"
@@ -400,6 +432,8 @@
   ;;                   'katakana-jisx0201
   ;;                   (cons "Source Han Sans JP Light" "iso10646-1"))
 
+
+
   ;;; Behavior
 
   ;; Default Browser
@@ -414,17 +448,37 @@
   (setq golden-ratio-auto-scale t)
 
   ;; Save Desktop
-  (desktop-save-mode 1)
+  (desktop-save-mode 0)
 
+  ;; Display current time in minibuffer (will not work)
+
+  ;(setq minibuffer-line-format '((:eval
+  ;                                (let ((time-string (format-time-string "%l:%M %b %d %a")))
+  ;                                  (concat
+  ;                                   (make-string (- (frame-text-cols)
+  ;                                                   (string-width time-string)) ? )
+  ;                                   time-string)))))
+  ;(minibuffer-line-mode)
+
+  ;; Display current time in powerline
+  (spaceline-define-segment date-time-segment
+    (shell-command-to-string "echo -n $(date +%k:%M--%m-%d)")
+    )
+
+  ;; No \ in neotree
+
+  ;; Open *.foo in foo-mode
+  ;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
   ;;; Diminishing
 
   ;; Diminish Buffer-read-only Error
-  (defun my-command-error-function (data context caller)
+  (defun command-error-function-no-bro (data context caller)
     "Ignore the buffer-read-only signal; pass the rest to the default handler."
     (when (not (eq (car data) 'buffer-read-only))
       (command-error-default-function data context caller)))
-      (setq command-error-function #'my-command-error-function)
+      (setq command-error-function #'command-error-function-no-bro)
 
   ;; Diminish spaceline indications
   (spacemacs|diminish holy-mode)
@@ -450,7 +504,7 @@
                                   (half-ascii    . "dark orchid")
                                   (full-ascii    . "orchid")
                                   (half-katakana . "dark goldenrod")))
-  (setq quail-japanese-use-double-n t)    ; Double n
+  (setq quail-japanese-use-double-n t)               ; Double n
   (setq mozc-candidate-style 'overlay)
 
   ;; Terminal
@@ -461,36 +515,37 @@
   ;; Org
   (with-eval-after-load 'org
     (setq spaceline-org-clock-p t)
+    (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
   )
   ;; Deft  Note taking mode
-  (setq deft-extensions '("org" "md" "txt"))        ; add more to recognize more file formats.
+  (setq deft-extensions '("org" "md" "txt"))         ; add more to recognize more file formats.
   (setq deft-directory "~/Google Drive/Org/Notes")
 
 
   ;; Twitter
-  (setq twittering-reverse-mode t)     ; Display tweets from the bottom of the buffer
-  (setq twittering-use-icon-storage t) ; Store the icons at .twittering-mode-icon.gz
+  (setq twittering-reverse-mode t)                   ; Display tweets from the bottom of the buffer
+  (setq twittering-use-icon-storage t)               ; Store the icons at .twittering-mode-icon.gz
 
-  ;; ERC        Emacs Internet Relay Chat Client
+  ;; ERC   Emacs Internet Relay Chat Client
 
   ;; Gitter
   (setq gitter-token "b82daddc46dc27391e313e8dc6dcc07d6c079ccf")
 
 
 
-  ;; EMMS       Emacs Multimedia System
+  ;; EMMS  Emacs Multimedia System
   (setq emms-source-file-default-directory "~/Music/")
 
   ;; Spaceline
   (setq powerline-default-separator 'bar)
 
   ;; Neotree  File tree plugin
-  (setq neo-theme 'icons)
+  (setq neo-theme 'icon)
   (setq neo-smart-open t)
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq neo-vc-integration nil)
 
-  ;; Dired    DIRectory EDitor
+  ;; Dired DIRectory EDitor
 
   ;; Ranger
 
@@ -629,10 +684,10 @@ This function is called at the very end of Spacemacs initialization."
  '(describe-char-unidata-list
    (quote
     (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
  '(package-selected-packages
    (quote
-    (gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

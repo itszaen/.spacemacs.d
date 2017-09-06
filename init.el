@@ -57,7 +57,7 @@
      deft
      pandoc     ; Universal document converter
      emoji
-     media
+     ;media
      gnus
      speed-reading
      (colors             :variables
@@ -69,7 +69,8 @@
      (ranger             :variables
                          ranger-show-preview t)
      (shell              :variables
-                         shell-default-shell 'multi-term)
+                         shell-default-shell 'multi-term
+                         shell-default-term-shell "/bin/zsh")
      (wakatime           :variables
                          wakatime-api-key "2db0c3a9-0164-447c-83ed-57bde0304722"
                          wakatime-cli-path "/usr/bin/wakatime")
@@ -80,15 +81,46 @@
                            :nick "zaen"
                            ))
      (org                :variables
+                         org-directory "~/Google Drive/Org"
+                         org-imenu-depth 10
+                         org-agenda-skip-scheduled-if-done t
+                         org-agenda-include-diary t
+                         org-agenda-include-deadlines t
                          org-enable-github-support t
                          org-enable-org-journal-support t
+                         org-clock-persist 'history
+                         org-default-notes-file (concat org-directory "/Notes.org")
+                         org-capture-templates
+          '(("t" "Task" entry (file+headline "~/Google Drive/Org/TODOs.org" "Tasks")
+             "** TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))\n %^{Effort}p \n")
+            ("m" "Meeting" entry (file+headline "~/Google Drive/Org/TODOs.org" "Meetings")
+             "** MEETING %?\n %u\n %a %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))")
+            ("j" "Journal" entry (file+datetree "~/Google Drive/Org/Journal-Desktop.org")
+             "** %?\nEntered on %U\n  %i\n  %a")
+            ("P" "pull-request-review" entry (file+headline "~/Google Drive/Org/TODOs.org" "Pull Requests")
+             "** TODO %a %? :pr:\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))")
+            ("p" "process-soon" entry (file+headline "~/Google Drive/Org/TODOs.org" "Email")
+             "** TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))")
+            ("w" "wait-for-reply" entry (file+headline "~/Google Drive/Org/TODOs.org" "Email")
+             "** WAIT %u %a %?\n")
+            ("r" "redmine-issue" entry (file+headline "~/Google Drive/Org/TODOs.org" "Redmine Issue")
+             "** TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))")
+            )
                          org-journal-dir "~/Google Drive/Org/Journal-Desktop/"
                          org-journal-file-format "%Y-%n-%d"
                          org-display-custom-times t
                          org-enable-bootstrap-support t
                          org-enable-reveal-js-support t
                          org-want-todo-bindings t
-                         org-projectile-file "TODOs.org")
+                         org-projectile-file "~/Google Drive/Org/Projects.org"
+                         org-agenda-files (quote
+                                           ("~/Google Drive/Org/TODOs.org"
+                                            "~/Google Drive/Org/Projects.org"
+                                            "~/Google Drive/Org/Books.org"
+                                            "~/Google Drive/Org/Notes.org"
+
+                                                  ))
+                         )
      (mu4e               :variables
                          mu4e-installation-path "/usr/share/emacs/site-lisp"
                          mu4e-maildir "/home/zaen/Mail")
@@ -96,15 +128,23 @@
 
    dotspacemacs-additional-packages
    '(
+     ac-php
      mozc
-     ac-mozc     ; Auto-completion
+     ac-mozc
      mozc-popup
      mozc-cursor-color
      multi-term
+     emms
      gitter
      cnfonts
+     yascroll
      org-notebook
      org-pomodoro
+     org-projectile-helm
+     org-alert
+     org-redmine
+     org-goal
+     org-super-agenda
      color-theme-buffer-local
      load-theme-buffer-local
      per-buffer-theme
@@ -204,7 +244,7 @@
 
    dotspacemacs-display-default-layout t
 
-   dotspacemacs-auto-resume-layouts t
+   dotspacemacs-auto-resume-layouts nil
 
    dotspacemacs-large-file-size 1 		             ; in MB
 
@@ -345,25 +385,42 @@
                      'help-echo (neo-buffer--help-echo-message node-short-name))
       (neo-buffer--node-list-set nil node)
       (neo-buffer--newline-and-begin)))
-  )
+    )
+
+  ;; Org
+  ; because we're using a newer version of org-mode downloaded from elpa,
+  ; and org-setup.el contains code that only works with the new version,
+  ; we have to load org-setup *after* initializing packages
+                                        ; -- mbtuckersimm
+  (spacemacs|use-package-add-hook org
+    :pre-init
+    (package-initialize)
+    )
+
   ) ; user-init
 
 
 (defun dotspacemacs/user-config ()
-  ;;; Keybindings
+
+  ;* Debug Flags *;
+  ;(setq debug-on-error t)
+
+
+  ;;;; Keybindings
 
   ;(defvar layout-leader-map (make-sparse-keymap))
 
   ;; Switch layout bound to SPC-*
-  (spacemacs/set-leader-keys (kbd "SPC 1") 'spacemacs/persp-switch-to-1)
-  (spacemacs/set-leader-keys (kbd "SPC 2") 'spacemacs/persp-switch-to-2)
-  (spacemacs/set-leader-keys (kbd "SPC 3") 'spacemacs/persp-switch-to-3)
-  (spacemacs/set-leader-keys (kbd "SPC 4") 'spacemacs/persp-switch-to-4)
-  (spacemacs/set-leader-keys (kbd "SPC 5") 'spacemacs/persp-switch-to-5)
-  (spacemacs/set-leader-keys (kbd "SPC 6") 'spacemacs/persp-switch-to-6)
-  (spacemacs/set-leader-keys (kbd "SPC 7") 'spacemacs/persp-switch-to-7)
-  (spacemacs/set-leader-keys (kbd "SPC 8") 'spacemacs/persp-switch-to-8)
-  (spacemacs/set-leader-keys (kbd "SPC 9") 'spacemacs/persp-switch-to-9)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 0") 'spacemacs/persp-switch-to-0)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 1") 'spacemacs/persp-switch-to-1)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 2") 'spacemacs/persp-switch-to-2)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 3") 'spacemacs/persp-switch-to-3)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 4") 'spacemacs/persp-switch-to-4)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 5") 'spacemacs/persp-switch-to-5)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 6") 'spacemacs/persp-switch-to-6)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 7") 'spacemacs/persp-switch-to-7)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 8") 'spacemacs/persp-switch-to-8)
+  ;; (spacemacs/set-leader-keys (kbd "SPC 9") 'spacemacs/persp-switch-to-9)
 
   ;; Switch workspace bound to g-*
   (define-key evil-normal-state-map (kbd "g 1") 'eyebrowse-switch-to-window-config-1)
@@ -385,6 +442,18 @@
   ;; (define-key magit-normal-state-map (kbd "g 7") 'eyebrowse-switch-to-window-config-7)
   ;; (define-key magit-normal-state-map (kbd "g 8") 'eyebrowse-switch-to-window-config-8)
   ;; (define-key magit-normal-state-map (kbd "g 9") 'eyebrowse-switch-to-window-config-9)
+  ; Neotree
+  ;; (with-eval-after-load 'neotree
+  ;;   (define-key neotree-mode-map (kbd "g 1") 'eyebrowse-switch-to-window-config-1)
+  ;;   (define-key neotree-mode-map (kbd "g 2") 'eyebrowse-switch-to-window-config-2)
+  ;;   (define-key neotree-mode-map (kbd "g 3") 'eyebrowse-switch-to-window-config-3)
+  ;;   (define-key neotree-mode-map (kbd "g 4") 'eyebrowse-switch-to-window-config-4)
+  ;;   (define-key neotree-mode-map (kbd "g 5") 'eyebrowse-switch-to-window-config-5)
+  ;;   (define-key neotree-mode-map (kbd "g 6") 'eyebrowse-switch-to-window-config-6)
+  ;;   (define-key neotree-mode-map (kbd "g 7") 'eyebrowse-switch-to-window-config-7)
+  ;;   (define-key neotree-mode-map (kbd "g 8") 'eyebrowse-switch-to-window-config-8)
+  ;;   (define-key neotree-mode-map (kbd "g 9") 'eyebrowse-switch-to-window-config-9)
+  ;;   )
 
   ;; Switch window bound to *
   (define-key evil-normal-state-map "0" 'winum-select-window-0)
@@ -407,10 +476,32 @@
   ;; (define-key magit-normal-state-map "7" 'winum-select-window-7)
   ;; (define-key magit-normal-state-map "8" 'winum-select-window-8)
   ;; (define-key magit-normal-state-map "9" 'winum-select-window-9)
+  (with-eval-after-load 'neotree
+    (define-key neotree-mode-map "1" 'winum-select-window-1)
+    (define-key neotree-mode-map "2" 'winum-select-window-2)
+    (define-key neotree-mode-map "3" 'winum-select-window-3)
+    (define-key neotree-mode-map "4" 'winum-select-window-4)
+    (define-key neotree-mode-map "5" 'winum-select-window-5)
+    (define-key neotree-mode-map "6" 'winum-select-window-6)
+    (define-key neotree-mode-map "7" 'winum-select-window-7)
+    (define-key neotree-mode-map "8" 'winum-select-window-8)
+    (define-key neotree-mode-map "9" 'winum-select-window-9)
+    )
+  (with-eval-after-load 'org-agenda
+    (define-key org-agenda-mode-map "1" 'winum-select-window-1)
+    (define-key org-agenda-mode-map "2" 'winum-select-window-2)
+    (define-key org-agenda-mode-map "3" 'winum-select-window-3)
+    (define-key org-agenda-mode-map "4" 'winum-select-window-4)
+    (define-key org-agenda-mode-map "5" 'winum-select-window-5)
+    (define-key org-agenda-mode-map "6" 'winum-select-window-6)
+    (define-key org-agenda-mode-map "7" 'winum-select-window-7)
+    (define-key org-agenda-mode-map "8" 'winum-select-window-8)
+    (define-key org-agenda-mode-map "9" 'winum-select-window-9)
+    )
 
+  ;;;; Mouse Bindings
 
-
-  ;;; Faces, fonts, fontsets
+  ;;;; Faces, fonts, fontsets
 
   ;; Character set & encoding
   (set-language-environment "UTF-8")
@@ -423,11 +514,11 @@
                       :background "aquamarine" :foreground "black")
 
   ;; Org font
-  (defun org-face-mode ()
-    (interactive)
-    (setq buffer-face-mode-face '(:family "Source Han Sans Pro" :height normal :width normal))
-    (buffer-face-mode))
-  (add-hook 'org-mode-hook 'org-face-mode)
+  ;(defun org-face-mode ()
+  ;  (interactive)
+  ;  (setq buffer-face-mode-face '(:family "Source Han Sans Pro" :height normal :width normal))
+  ;  (buffer-face-mode))
+  ;(add-hook 'org-mode-hook 'org-face-mode)
 
 
   ;; Fonts
@@ -450,7 +541,12 @@
 
 
 
-  ;;; Behavior
+  ;;;; Behavior
+
+  ;; Show system name and currently editing file name in the title bar
+  (setq frame-title-format
+        (list (format "%s %%S --  %%j " (system-name))
+              '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
   ;; Default Browser
   (setq browse-url-browser-function 'browse-url-chromium)
@@ -466,29 +562,51 @@
   ;; Save Desktop
   (desktop-save-mode 0)
 
-  ;; Display current time in minibuffer (will not work)
+  ;; Delete region
+  (delete-selection-mode 1)
 
-  ;(setq minibuffer-line-format '((:eval
-  ;                                (let ((time-string (format-time-string "%l:%M %b %d %a")))
-  ;                                  (concat
-  ;                                   (make-string (- (frame-text-cols)
-  ;                                                   (string-width time-string)) ? )
-  ;                                   time-string)))))
-  ;(minibuffer-line-mode)
+  ;; Scroll Bar (yascroll)
+  (global-yascroll-bar-mode 1)
 
+  ;;; Modeline
+  ;; mode line time stamp
+  (setq display-time-day-and-date t)
+  (setq display-time-24hr-format t)
+  (setq display-time-format "%m/%d %T")              ; Month/Day Hour:Minute:Second
+  (setq display-time-interval 1)               ; update every second
+  ;; No load average
+  (setq display-time-default-load-average nil)
+  ;; No "Mail"
+  (setq display-time-mail-string "")
+  (display-time-mode 1)
 
   ;; Open *.foo in foo-mode
   ;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
   (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
+  ;; Org-agenda-list on startup
+  (defun org-agenda-startup()
+    (interactive)
+    (org-agenda-list 1)
+    (switch-to-buffer "*Org Agenda*")
+    (spacemacs/toggle-maximize-buffer)
+    (org-agenda-manipulate-query-add)
+    (get-buffer "*Org Agenda*")
+   )
+    ; And the following in emacs-custom-settings
+    ; '(initial-buffer-choice (quote org-agenda-startup))
+
   ;;; Diminishing
 
-  ;; Diminish Buffer-read-only Error
-  (defun command-error-function-no-bro (data context caller)
+  ;; Diminish Errors (buffer-read-only, beginning-of-buffer, end-of-buffer)
+  (defun command-error-function-no-buffer-error (data context caller)
     "Ignore the buffer-read-only signal; pass the rest to the default handler."
-    (when (not (eq (car data) 'buffer-read-only))
+    (when (not (eq (car data) '(buffer-read-only
+                                beginning-of-buffer
+                                end-of-buffer
+                                )))
       (command-error-default-function data context caller)))
-      (setq command-error-function #'command-error-function-no-bro)
+      (setq command-error-function #'command-error-function-no-buffer-error)
 
   ;; Diminish spaceline indications
   (spacemacs|diminish holy-mode)
@@ -506,7 +624,80 @@
   (with-eval-after-load 'command-log-mode
     (diminish 'command-log-mode))
 
-  ;;; Components
+  ;;;; Components
+
+  ;;; Org
+
+  ;; Org
+  (with-eval-after-load 'org
+    (require 'org-projectile)
+    (setq spaceline-org-clock-p t)
+    (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
+    (setq org-startup-with-inline-images t)
+    (setq org-archive-location "~/Google Drive/Org/Archive.org")
+    )
+
+  ;; Org-alert
+  (setq alert-default-style 'notification)
+
+  ;; Org-super-agenda
+
+  (spacemacs|use-package-add-hook org-agenda
+    :post-config
+    (setq org-super-agenda-groups
+         '((:name "Today"
+                  :time-grid t
+                  :date today
+                  :todo "TODAY"
+                  :scheduled today
+                  :order 2
+                  )
+           (:name "Important"
+                  :tag "Important"
+                  :priority "A"
+                  )
+           (:name "Work"
+                  :tag "Work"
+                  :order 11)
+           (:name "Due Today"
+                  :deadline today
+                  :order 1)
+           (:name "Due Soon"
+                  :deadline future
+                  )
+           (:name "Overdue"
+                  :deadline past)
+           (:name "Projects"
+                  :tag "Project"
+                  :order 12)
+           (:name "Research"
+                  :tag "Research"
+                  :order 13)
+           (:name "Routine"
+                                        ;:habit
+                  :order 10
+                  )
+           (:order-multi (3 (:name "Done today"
+                                   :and (:regexp "State \"DONE\""
+                                                 :log t)
+                                   )
+                            (:name "Clocked today"
+                                   :log t
+                                   )
+                            ))
+           (:priority<= "B"
+                        :order 1)
+
+           )
+         )
+    ;(setq org-agenda nil "a")
+    (org-super-agenda-mode t)
+
+    )
+
+
+
+  ;;; Mozc
   (global-set-key (kbd "C-j") 'mozc-mode)
   (setq mozc-cursor-color-alist '((direct        . "blue")
                                   (hiragana      . "green")
@@ -514,55 +705,51 @@
                                   (half-ascii    . "dark orchid")
                                   (full-ascii    . "orchid")
                                   (half-katakana . "dark goldenrod")))
-  (setq quail-japanese-use-double-n t)               ; Double n
+  (setq quail-japanese-use-double-n t)               ; Double n = ん
   (setq mozc-candidate-style 'overlay)
 
-  ;; Terminal
+  ;;; Terminal
   (setq explicit-shell-file-name "/bin/zsh")         ; Set default to zsh
   (setq multi-term-program explicit-shell-file-name) ; Multi-term = zsh
 
 
-  ;; Org
-  (with-eval-after-load 'org
-    (setq spaceline-org-clock-p t)
-    (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
-  )
-  ;; Deft  Note taking mode
+
+  ;;; Deft  Note taking mode
   (setq deft-extensions '("org" "md" "txt"))         ; add more to recognize more file formats.
   (setq deft-directory "~/Google Drive/Org/Notes")
 
 
-  ;; Twitter
+  ;;; Twitter
   (setq twittering-reverse-mode t)                   ; Display tweets from the bottom of the buffer
   (setq twittering-use-icon-storage t)               ; Store the icons at .twittering-mode-icon.gz
 
-  ;; ERC   Emacs Internet Relay Chat Client
+  ;;; ERC   Emacs Internet Relay Chat Client
 
-  ;; Gitter
+  ;;; Gitter
   (setq gitter-token "b82daddc46dc27391e313e8dc6dcc07d6c079ccf")
 
 
 
-  ;; EMMS  Emacs Multimedia System
+  ;;; EMMS  Emacs Multimedia System
   (setq emms-source-file-default-directory "~/Music/")
 
-  ;; Spaceline
+  ;;; Spaceline
   (setq powerline-default-separator 'bar)
 
-  ;; Neotree  File tree plugin
+  ;;; Neotree  File tree plugin
   (setq neo-theme 'icons)
   (setq neo-smart-open t)
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq neo-vc-integration nil)
 
-  ;; Dired DIRectory EDitor
+  ;;; Dired DIRectory EDitor
 
-  ;; Ranger
-
-
+  ;;; Ranger
 
 
-  ;; EWW   Emacs Web Browser
+
+
+  ;;; EWW   Emacs Web Browser
   (defvar eww-disable-colorize t)
   (defun shr-colorize-region--disable (orig start end fg &optional bg &rest _)
     (unless eww-disable-colorize
@@ -652,30 +839,6 @@
 
   ) ; user-config
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(custom-set-variables
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(custom-safe-themes
-   (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
- '(evil-want-Y-yank-to-eol nil)
- '(package-selected-packages
-   (quote
-    (per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
- '(wakatime-python-bin nil)
- ) ; custom-set-variables
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#eee" :background "#011827")) (((class color) (min-colors 256)) (:foreground "#eee" :background "black"))))
- ) ; custom-set-faces
-
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
 This is an auto-generated function, do not modify its content directly, use
@@ -695,9 +858,10 @@ This function is called at the very end of Spacemacs initialization."
    (quote
     (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
  '(evil-want-Y-yank-to-eol t)
+ '(initial-buffer-choice (quote org-agenda-startup))
  '(package-selected-packages
    (quote
-    (minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (yascroll org-super-agenda org-redmine org-alert ac-php pyvenv mu4e-alert hy-mode geiser magit yasnippet company spaceline-all-the-icons github-search company-go markdown-mode magit-popup git-commit alert slime web-mode rebecca-theme realgud pyim pyenv-mode projectile-rails orgit org-brain mmm-mode magithub ghub+ apiwrap ghub live-py-mode evil-org evil-lion esh-help alchemist ac-php-core flycheck multiple-cursors org-projectile-helm org-category-capture minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -705,4 +869,4 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:foreground "#eee" :background "#011827")) (((class color) (min-colors 256)) (:foreground "#eee" :background "black")))))
-) ; emacs-custom-settings
+) ;; emacs-custom-settings

@@ -113,8 +113,12 @@
                          org-enable-reveal-js-support t
                          org-want-todo-bindings t
                          org-projectile-file "~/Google Drive/Org/Projects.org"
+                         org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
+                                             ))
                          org-agenda-files (quote
-                                           ("~/Google Drive/Org/TODOs.org"
+                                           ("~/Google Drive/Org/Buy.org"
+                                            "~/Google Drive/Org/Routines.org"
+                                            "~/Google Drive/Org/TODOs.org"
                                             "~/Google Drive/Org/Projects.org"
                                             "~/Google Drive/Org/Books.org"
                                             "~/Google Drive/Org/Notes.org"
@@ -131,8 +135,8 @@
      ac-php
      mozc
      ac-mozc
-     mozc-popup
-     mozc-cursor-color
+     ;mozc-popup
+     ;mozc-cursor-color
      multi-term
      emms
      gitter
@@ -143,7 +147,7 @@
      org-projectile-helm
      org-alert
      org-redmine
-     org-goal
+     ;org-goal
      org-super-agenda
      color-theme-buffer-local
      load-theme-buffer-local
@@ -210,7 +214,7 @@
                                :size 12
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.2)
 
    dotspacemacs-leader-key "SPC"
 
@@ -346,26 +350,19 @@
     )
 
   ;; Spaceline
-  ; Display current time in powerline
-  (spacemacs|use-package-add-hook spaceline
-    :post-config
-    (spaceline-define-segment date-time-segment
-      (shell-command-to-string "echo -n $(date +%k:%M--%m-%d)")
-      )
-  	)
   ; All the icons
-  (with-eval-after-load 'spaceline
-    (spacemacs|use-package-add-hook spaceline-all-the-icons
-      :post-init
-    (spaceline-all-the-icons-theme)
-    (spaceline-toggle-all-the-icons-bookmark-on)
-    (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
-    (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
-    (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
-    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
-    (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
-    )
-  )
+  ;; (with-eval-after-load 'spaceline
+  ;;   (spacemacs|use-package-add-hook spaceline-all-the-icons
+  ;;     :post-init
+  ;;   (spaceline-all-the-icons-theme)
+  ;;   (spaceline-toggle-all-the-icons-bookmark-on)
+  ;;   (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
+  ;;   (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
+  ;;   (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
+  ;;   (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
+  ;;   (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+  ;;   )
+  ;; )
 
   ;; No '/' in neotree
   (spacemacs|use-package-add-hook neotree
@@ -392,10 +389,10 @@
   ; and org-setup.el contains code that only works with the new version,
   ; we have to load org-setup *after* initializing packages
                                         ; -- mbtuckersimm
-  (spacemacs|use-package-add-hook org
-    :pre-init
-    (package-initialize)
-    )
+  ;; (spacemacs|use-package-add-hook org
+  ;;   :pre-init
+  ;;   (package-initialize)
+  ;;   )
 
   ) ; user-init
 
@@ -556,7 +553,7 @@
   (setq frame-resize-pixelwise t)                              ; Fix the gap
 
   ;; Golden Ratio
-  (golden-ratio-mode 1)
+  (golden-ratio-mode 0)
   (setq golden-ratio-auto-scale t)
 
   ;; Save Desktop
@@ -579,6 +576,18 @@
   ;; No "Mail"
   (setq display-time-mail-string "")
   (display-time-mode 1)
+  ;; all-the-icons theme
+  (with-eval-after-load 'spaceline
+  (spacemacs|use-package-add-hook spaceline-all-the-icons
+    :post-config
+    (spaceline-all-the-icons)
+    (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
+    (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
+    (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
+    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
+    (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+    )
+  )
 
   ;;; Open *.foo in foo-mode
   ;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
@@ -635,6 +644,11 @@
     (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
     (setq org-startup-with-inline-images t)
     (setq org-archive-location "~/Google Drive/Org/Archive.org")
+    (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
+    (setq org-agenda-time-grid
+          '((daily today require-timed)
+            "----------------"
+            (500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300)))
     )
 
   ;; Org-alert
@@ -650,7 +664,7 @@
                   :date today
                   :todo "TODAY"
                   :scheduled today
-                  :order 2
+                  :order 5
                   )
            (:name "Important"
                   :tag "Important"
@@ -658,15 +672,23 @@
                   )
            (:name "Work"
                   :tag "Work"
-                  :order 11)
+                  :order 11
+                  )
+           (:name "Assignments"
+                  :tag "Assignment"
+                  :order 9)
            (:name "Due Today"
                   :deadline today
-                  :order 1)
+                  :order 1
+                  )
            (:name "Due Soon"
                   :deadline future
+                  :order 7
                   )
            (:name "Overdue"
-                  :deadline past)
+                  :deadline past
+                  :order 6
+                  )
            (:name "Projects"
                   :tag "Project"
                   :order 12)
@@ -675,6 +697,7 @@
                   :order 13)
            (:name "Routine"
                                         ;:habit
+                  :tag "Chore" "Routine" "Daily"
                   :order 10
                   )
            (:order-multi (3 (:name "Done today"

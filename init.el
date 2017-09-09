@@ -113,8 +113,7 @@
                          org-enable-reveal-js-support t
                          org-want-todo-bindings t
                          org-projectile-file "~/Google Drive/Org/Projects.org"
-                         org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
-                                             ))
+
                          org-agenda-files (quote
                                            ("~/Google Drive/Org/Buy.org"
                                             "~/Google Drive/Org/Routines.org"
@@ -644,6 +643,8 @@
     (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
     (setq org-startup-with-inline-images t)
     (setq org-archive-location "~/Google Drive/Org/Archive.org")
+    (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
+                                  )))
     (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
     (setq org-agenda-time-grid
           '((daily today require-timed)
@@ -664,43 +665,40 @@
                   :date today
                   :todo "TODAY"
                   :scheduled today
-                  :order 5
+                  :order 2
                   )
            (:name "Important"
                   :tag "Important"
                   :priority "A"
-                  )
-           (:name "Work"
-                  :tag "Work"
-                  :order 11
+                  :order 6
                   )
            (:name "Assignments"
                   :tag "Assignment"
-                  :order 9)
+                  :order 10)
            (:name "Due Today"
                   :deadline today
                   :order 1
                   )
            (:name "Due Soon"
                   :deadline future
-                  :order 7
+                  :order 8
                   )
            (:name "Overdue"
                   :deadline past
-                  :order 6
+                  :order 7
                   )
            (:name "Projects"
                   :tag "Project"
-                  :order 12)
+                  :order 13)
            (:name "Research"
                   :tag "Research"
-                  :order 13)
+                  :order 14)
            (:name "Routine"
-                                        ;:habit
-                  :tag "Chore" "Routine" "Daily"
-                  :order 10
+                  ;:habit t
+                  :tag ("Chore" "Routine" "Daily")
+                  :order 11
                   )
-           (:order-multi (3 (:name "Done today"
+           (:order-multi (9 (:name "Done today"
                                    :and (:regexp "State \"DONE\""
                                                  :log t)
                                    )
@@ -708,8 +706,15 @@
                                    :log t
                                    )
                             ))
-           (:priority<= "B"
-                        :order 1)
+           (:name "Waiting"
+                  :todo "WAITING"
+                  :order 20)
+           (:priority<= "C"
+                        :order 80)
+           (:name "trivial"
+                  :tag ("Trivial" "Unimportant")
+                  :todo ("SOMEDAY" )
+                  :order 90)
 
            )
          )

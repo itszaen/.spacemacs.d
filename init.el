@@ -138,6 +138,7 @@
      ;mozc-popup
      ;mozc-cursor-color
      multi-term
+     multi-scratch
      emms
      gitter
      cnfonts
@@ -725,13 +726,13 @@
 
 
   ;;; Mozc
-  (global-set-key (kbd "C-j") 'mozc-mode)
-  (setq mozc-cursor-color-alist '((direct        . "blue")
-                                  (hiragana      . "green")
-                                  (full-katakana . "goldenrod")
-                                  (half-ascii    . "dark orchid")
-                                  (full-ascii    . "orchid")
-                                  (half-katakana . "dark goldenrod")))
+  (global-set-key (kbd "C-\\") 'mozc-mode)
+  ;; (setq mozc-cursor-color-alist '((direct        . "blue")
+  ;;                                 (hiragana      . "green")
+  ;;                                 (full-katakana . "goldenrod")
+  ;;                                 (half-ascii    . "dark orchid")
+  ;;                                 (full-ascii    . "orchid")
+  ;;                                 (half-katakana . "dark goldenrod")))
   (setq quail-japanese-use-double-n t)               ; Double n = ん
   (setq mozc-candidate-style 'overlay)
 

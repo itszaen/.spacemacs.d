@@ -500,10 +500,10 @@
   (spacemacs/declare-prefix "o" "Custom")
 
   ;; Switch to Org-agenda buffer
-  (defun Org-agenda()
+  (defun Org-Agenda-buffer()
     (switch-to-buffer "*Org Agenda*")
     )
-  (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-agenda)
+  (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-Agenda-buffer)
   ;; Org-TODO files
   (spacemacs/declare-prefix "o t" "Org-files")
   (defun TODOs ()

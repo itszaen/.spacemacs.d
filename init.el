@@ -192,11 +192,11 @@
 
    ;; `recents' `bookmarks' `projects' `agenda' `todos'
    dotspacemacs-startup-lists '(
-                                (agenda . 10)
-                                (recents . 5)
-                                (projects . 7)
-                                (bookmarks . 10)
-                                (todos . 20)
+                                (agenda . 0)
+                                (recents . 10)
+                                (projects . 10)
+                                (bookmarks . 5)
+                                (todos . 0)
                                 )
 
    dotspacemacs-startup-buffer-responsive t
@@ -497,6 +497,139 @@
     (define-key org-agenda-mode-map "9" 'winum-select-window-9)
     )
 
+  ;;; Custom Bindings
+  (spacemacs/declare-prefix "o" "Custom")
+
+  ;; Switch to Org-agenda buffer
+  (defun Org-Agenda-buffer()
+    (switch-to-buffer "*Org Agenda*")
+    )
+  (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-Agenda-buffer)
+  ;; Org-TODO files
+  (spacemacs/declare-prefix "o t" "Org-files")
+  (defun TODOs ()
+    (interactive)
+    (find-file "~/Google Drive/Org/TODOs.org")
+    )
+  (defun Routines ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Routines.org"))
+  (defun Timetable ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Timetable.org"))
+
+  (spacemacs/set-leader-keys (kbd "SPC o t t") 'TODOs)
+  (spacemacs/set-leader-keys (kbd "SPC o t r") 'Routines)
+  (spacemacs/set-leader-keys (kbd "SPC o t T") 'Timetable)
+
+  ;; Notebooks
+  (spacemacs/declare-prefix "o n" "Notebook")
+  (defun Chemistry ()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Chemistry")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Biology ()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Biology")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Arts ()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Arts")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Technology()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Technology")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Mathematics()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Mathematics")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun World-History()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Geography_and_History/World_History")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Earth-Science()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Earth_Science")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Piano()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Arts/Music/Piano")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun English()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/English")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Civics()
+    (interactive)
+    (find-file "~/Google Drive/Notebook/Civics/4年公民.txt")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Physics()
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Physics")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
+  (defun Japanese-History()
+         (interactive)
+         (find-file "~/Google Drive/Notebooks/Geography_and_History/Asia/Japan/History")
+         (spacemacs/toggle-maximize-buffer)
+         (neotree-show)
+         )
+  (defun Lyrics()
+              (interactive)
+              (find-file "~/Google Drive/Notebooks/Lyrics")
+              (spacemacs/toggle-maximize-buffer)
+              (neotree-show)
+              )
+  (defun Parenting()
+                   (interactive)
+                   (find-file "~/Google Drive/Notebooks/Parenting")
+                   (spacemacs/toggle-maximize-buffer)
+                   (neotree-show)
+                   )
+
+  (spacemacs/set-leader-keys (kbd "SPC o n c") 'Chemistry)
+  (spacemacs/set-leader-keys (kbd "SPC o n b") 'Biology)
+  (spacemacs/set-leader-keys (kbd "SPC o n a") 'Arts)
+  (spacemacs/set-leader-keys (kbd "SPC o n t") 'Technology)
+  (spacemacs/set-leader-keys (kbd "SPC o n m") 'Mathematics)
+  (spacemacs/set-leader-keys (kbd "SPC o n w") 'World-History)
+  (spacemacs/set-leader-keys (kbd "SPC o n P") 'Parenting)
+  (spacemacs/set-leader-keys (kbd "SPC o n p") 'Physics)
+  (spacemacs/set-leader-keys (kbd "SPC o n h") 'Japanese-History)
+  (spacemacs/set-leader-keys (kbd "SPC o n C") 'Civics)
+  (spacemacs/set-leader-keys (kbd "SPC o n e") 'Earth-Science)
+ ; (spacemacs/set-leader-keys (kbd "SPC o n w") 'World-History)
+ ; (spacemacs/set-leader-keys (kbd "SPC o n w") 'World-History)
+
+
+
+
+
+
+
+
   ;;;; Mouse Bindings
 
   ;;;; Faces, fonts, fontsets
@@ -552,7 +685,7 @@
   ;; Default frame
   (add-to-list 'default-frame-alist '(fullscreen . maximized)) ; Maximized by default
   (setq frame-resize-pixelwise t)                              ; Fix the gap
-
+;
   ;; Golden Ratio
   (golden-ratio-mode 0)
   (setq golden-ratio-auto-scale t)
@@ -726,13 +859,13 @@
 
 
   ;;; Mozc
-  (global-set-key (kbd "C-\\") 'mozc-mode)
-  ;; (setq mozc-cursor-color-alist '((direct        . "blue")
-  ;;                                 (hiragana      . "green")
-  ;;                                 (full-katakana . "goldenrod")
-  ;;                                 (half-ascii    . "dark orchid")
-  ;;                                 (full-ascii    . "orchid")
-  ;;                                 (half-katakana . "dark goldenrod")))
+  (spacemacs/set-leader-keys (kbd "C-j") 'mozc-mode)
+  ;(setq mozc-cursor-color-alist '((direct        . "blue")
+  ;                                (hiragana      . "green")
+  ;                                (full-katakana . "goldenrod")
+  ;                                (half-ascii    . "dark orchid")
+  ;                                (full-ascii    . "orchid")
+  ;                                (half-katakana . "dark goldenrod")))
   (setq quail-japanese-use-double-n t)               ; Double n = ん
   (setq mozc-candidate-style 'overlay)
 

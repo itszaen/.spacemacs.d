@@ -191,11 +191,11 @@
 
    ;; `recents' `bookmarks' `projects' `agenda' `todos'
    dotspacemacs-startup-lists '(
-                                (agenda . 10)
-                                (recents . 5)
-                                (projects . 7)
-                                (bookmarks . 10)
-                                (todos . 20)
+                                (agenda . 0)
+                                (recents . 10)
+                                (projects . 10)
+                                (bookmarks . 5)
+                                (todos . 0)
                                 )
 
    dotspacemacs-startup-buffer-responsive t
@@ -496,16 +496,31 @@
     (define-key org-agenda-mode-map "9" 'winum-select-window-9)
     )
 
-  ;;; Bindings to files
+  ;;; Custom Bindings
   (spacemacs/declare-prefix "o" "Custom")
 
-  ;; Google Dive/Org/TODOs.org
+  ;; Switch to Org-agenda buffer
+  (defun Org-agenda()
+    (switch-to-buffer "*Org Agenda*")
+    )
+  (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-agenda)
+  ;; Org-TODO files
+  (spacemacs/declare-prefix "o t" "Org-files")
   (defun TODOs ()
     (interactive)
     (find-file "~/Google Drive/Org/TODOs.org")
     )
+  (defun Routines ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Routines.org"))
+  (defun Timetable ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Timetable.org"))
 
-    (spacemacs/set-leader-keys (kbd "SPC o t") 'TODOs)
+  (spacemacs/set-leader-keys (kbd "SPC o t t") 'TODOs)
+  (spacemacs/set-leader-keys (kbd "SPC o t r") 'Routines)
+  (spacemacs/set-leader-keys (kbd "SPC o t T") 'Timetable)
+
   ;; Notebooks
   (spacemacs/declare-prefix "o n" "Notebook")
   (defun Chemistry ()
@@ -669,7 +684,7 @@
   ;; Default frame
   (add-to-list 'default-frame-alist '(fullscreen . maximized)) ; Maximized by default
   (setq frame-resize-pixelwise t)                              ; Fix the gap
-
+;
   ;; Golden Ratio
   (golden-ratio-mode 0)
   (setq golden-ratio-auto-scale t)

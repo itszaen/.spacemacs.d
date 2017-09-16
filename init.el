@@ -62,7 +62,7 @@
      speed-reading
      (colors             :variables
                          color-colorize-identifiers 'all
-                         colors-enable-nyan-cat-progress-bar t)
+                         colors-enable-nyan-cat-progress-bar nil)
      (auto-completion    :variables
                          auto-completion-enable-sort-by-usage t
                          auto-completion-enable-snippets-in-popup t)
@@ -116,13 +116,12 @@
                          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
                                              ))
                          org-agenda-files (quote
-                                           ("~/Google Drive/Org/Buy.org"
+                                           (
                                             "~/Google Drive/Org/Routines.org"
                                             "~/Google Drive/Org/TODOs.org"
                                             "~/Google Drive/Org/Projects.org"
-                                            "~/Google Drive/Org/Books.org"
                                             "~/Google Drive/Org/Notes.org"
-
+                                            "~/Google Drive/Org/Timetable.org"
                                                   ))
                          )
      (mu4e               :variables
@@ -502,6 +501,7 @@
 
   ;; Switch to Org-agenda buffer
   (defun Org-Agenda-buffer()
+    (interactive)
     (switch-to-buffer "*Org Agenda*")
     )
   (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-Agenda-buffer)
@@ -591,23 +591,23 @@
     (neotree-show)
     )
   (defun Japanese-History()
-         (interactive)
-         (find-file "~/Google Drive/Notebooks/Geography_and_History/Asia/Japan/History")
-         (spacemacs/toggle-maximize-buffer)
-         (neotree-show)
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Geography_and_History/Asia/Japan/History")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
          )
   (defun Lyrics()
-              (interactive)
-              (find-file "~/Google Drive/Notebooks/Lyrics")
-              (spacemacs/toggle-maximize-buffer)
-              (neotree-show)
-              )
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Lyrics/Ariana Grande/Love me Harder.org")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
   (defun Parenting()
-                   (interactive)
-                   (find-file "~/Google Drive/Notebooks/Parenting")
-                   (spacemacs/toggle-maximize-buffer)
-                   (neotree-show)
-                   )
+    (interactive)
+    (find-file "~/Google Drive/Notebooks/Parenting")
+    (spacemacs/toggle-maximize-buffer)
+    (neotree-show)
+    )
 
   (spacemacs/set-leader-keys (kbd "SPC o n c") 'Chemistry)
   (spacemacs/set-leader-keys (kbd "SPC o n b") 'Biology)
@@ -620,7 +620,7 @@
   (spacemacs/set-leader-keys (kbd "SPC o n h") 'Japanese-History)
   (spacemacs/set-leader-keys (kbd "SPC o n C") 'Civics)
   (spacemacs/set-leader-keys (kbd "SPC o n e") 'Earth-Science)
- ; (spacemacs/set-leader-keys (kbd "SPC o n w") 'World-History)
+  (spacemacs/set-leader-keys (kbd "SPC o n l") 'Lyrics)
  ; (spacemacs/set-leader-keys (kbd "SPC o n w") 'World-History)
 
 
@@ -777,12 +777,15 @@
     (setq spaceline-org-clock-p t)
     (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
     (setq org-startup-with-inline-images t)
+    (setq org-catch-invisible-edits t)
+    (setq org-set-startup-visibility 'showall)
     (setq org-archive-location "~/Google Drive/Org/Archive.org")
     (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
+    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
     (setq org-agenda-time-grid
           '((daily today require-timed)
             "----------------"
-            (500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300)))
+            (600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200)))
     )
 
   ;; Org-alert
@@ -831,7 +834,7 @@
                   :tag ("Chore" "Routine" "Daily")
                   :order 11
                   )
-           (:order-multi (9 (:name "Done today"
+           (:order-multi (40 (:name "Done today"
                                    :and (:regexp "State \"DONE\""
                                                  :log t)
                                    )
@@ -859,7 +862,8 @@
 
 
   ;;; Mozc
-  (spacemacs/set-leader-keys (kbd "C-j") 'mozc-mode)
+  (global-set-key (kbd "C-SPC") 'mozc-mode)
+  (global-set-key (kbd "M-SPC") 'set-mark-command)
   ;(setq mozc-cursor-color-alist '((direct        . "blue")
   ;                                (hiragana      . "green")
   ;                                (full-katakana . "goldenrod")

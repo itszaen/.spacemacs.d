@@ -115,14 +115,7 @@
                          org-projectile-file "~/Google Drive/Org/Projects.org"
                          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
                                              ))
-                         org-agenda-files (quote
-                                           (
-                                            "~/Google Drive/Org/Routines.org"
-                                            "~/Google Drive/Org/TODOs.org"
-                                            "~/Google Drive/Org/Projects.org"
-                                            "~/Google Drive/Org/Notes.org"
-                                            "~/Google Drive/Org/Timetable.org"
-                                                  ))
+
                          )
      (mu4e               :variables
                          mu4e-installation-path "/usr/share/emacs/site-lisp"
@@ -517,10 +510,18 @@
   (defun Timetable ()
     (interactive)
     (find-file "~/Google Drive/Org/Timetable.org"))
+  (defun Archive ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Archive.org"))
+  (defun Projects ()
+    (interactive)
+    (find-file "~/Google Drive/Org/Projects.org"))
 
   (spacemacs/set-leader-keys (kbd "SPC o t t") 'TODOs)
   (spacemacs/set-leader-keys (kbd "SPC o t r") 'Routines)
   (spacemacs/set-leader-keys (kbd "SPC o t T") 'Timetable)
+  (spacemacs/set-leader-keys (kbd "SPC o t a") 'Archive)
+  (spacemacs/set-leader-keys (kbd "SPC o t p") 'Projects)
 
   ;; Notebooks
   (spacemacs/declare-prefix "o n" "Notebook")
@@ -778,15 +779,31 @@
     (setq org-time-stamp-custom-formats '("<%Y %n %d %a>" . "<%Y %n %d %a %H:%M>"))
     (setq org-startup-with-inline-images t)
     (setq org-catch-invisible-edits t)
-    (setq org-set-startup-visibility 'showall)
-    (setq org-archive-location "~/Google Drive/Org/Archive.org")
+    (setq org-startup-folded 'content)
+    (setq org-use-speed-commands t)
+    (setq org-archive-location "~/Google Drive/Org/Archive.org::")
     (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
     (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
+    (setq org-agenda-files (list
+                       "~/Google Drive/Org/Routines.org"
+                       "~/Google Drive/Org/TODOs.org"
+                       "~/Google Drive/Org/Projects.org"
+                       "~/Google Drive/Org/Notes.org"
+                       "~/Google Drive/Org/Timetable.org"
+                       ))
     (setq org-agenda-time-grid
           '((daily today require-timed)
             "----------------"
-            (600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200)))
+            (600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100)))
     )
+  ;; Refresh org-agenda buffer automatically
+  (defun org-agenda-redo-in-other-window ()
+    "Call org-agenda-redo function even in the non-agenda buffer."
+    (interactive)
+    (let ((agenda-window (get-buffer-window org-agenda-buffer-name t)))
+      (when agenda-window
+        (with-selected-window agenda-window (org-agenda-redo)))))
+  (run-at-time nil 10 'org-agenda-redo-in-other-window)
 
   ;; Org-alert
   (setq alert-default-style 'notification)
@@ -808,9 +825,7 @@
                   :priority "A"
                   :order 6
                   )
-           (:name "Assignments"
-                  :tag "Assignment"
-                  :order 10)
+
            (:name "Due Today"
                   :deadline today
                   :order 1
@@ -823,11 +838,21 @@
                   :deadline past
                   :order 7
                   )
+
+           (:name "Assignments"
+                  :tag "Assignment"
+                  :order 10)
+           (:name "Issues"
+                  :tag "Issue"
+                  :order 12)
            (:name "Projects"
                   :tag "Project"
                   :order 13)
            (:name "Research"
                   :tag "Research"
+                  :order 15)
+           (:name "Emacs"
+                  :tag "Emacs"
                   :order 14)
            (:name "Routine"
                   ;:habit t
@@ -848,6 +873,7 @@
            (:priority<= "C"
                         :order 80)
            (:name "trivial"
+                  :priority<= "D"
                   :tag ("Trivial" "Unimportant")
                   :todo ("SOMEDAY" )
                   :order 90)
@@ -1017,8 +1043,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(custom-safe-themes
    (quote
     ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
@@ -1029,14 +1053,14 @@ This function is called at the very end of Spacemacs initialization."
  '(initial-buffer-choice (quote org-agenda-startup))
  '(package-selected-packages
    (quote
-    (white-sand-theme symon string-inflection ruby-refactor test-simple loc-changes load-relative password-generator org-journal impatient-mode helm-purpose window-purpose imenu-list godoctor go-rename flycheck-bashate exotica-theme editorconfig company-php company-lua cmake-ide levenshtein browse-at-remote yascroll org-super-agenda org-redmine org-alert ac-php pyvenv mu4e-alert hy-mode geiser magit yasnippet company spaceline-all-the-icons github-search company-go markdown-mode magit-popup git-commit alert slime web-mode rebecca-theme realgud pyim pyenv-mode projectile-rails orgit org-brain mmm-mode magithub ghub+ apiwrap ghub live-py-mode evil-org evil-lion esh-help alchemist ac-php-core flycheck multiple-cursors org-projectile-helm org-category-capture minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (pug-mode inflections white-sand-theme symon string-inflection ruby-refactor test-simple loc-changes load-relative password-generator org-journal impatient-mode helm-purpose window-purpose imenu-list godoctor go-rename flycheck-bashate exotica-theme editorconfig company-php company-lua cmake-ide levenshtein browse-at-remote yascroll org-super-agenda org-redmine org-alert ac-php pyvenv mu4e-alert hy-mode geiser magit yasnippet company spaceline-all-the-icons github-search company-go markdown-mode magit-popup git-commit alert slime web-mode rebecca-theme realgud pyim pyenv-mode projectile-rails orgit org-brain mmm-mode magithub ghub+ apiwrap ghub live-py-mode evil-org evil-lion esh-help alchemist ac-php-core flycheck multiple-cursors org-projectile-helm org-category-capture minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ )
 ) ;; emacs-custom-settings
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

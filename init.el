@@ -85,17 +85,9 @@
                          org-imenu-depth 10
                          org-enable-github-support t
                          org-enable-org-journal-support t
-                         org-clock-persist 'history
                          org-default-notes-file (concat org-directory "/Notes.org")
-                         org-journal-dir "~/Google Drive/Org/Journal/"
-                         org-journal-file-format "%F"
                          org-enable-bootstrap-support t
                          org-enable-reveal-js-support t
-                         org-want-todo-bindings t
-                         ;org-projectile-file "~/Google Drive/Org/Projects.org"
-                         org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)"
-                                             ))
-
                          )
      (mu4e               :variables
                          mu4e-installation-path "/usr/share/emacs/site-lisp"
@@ -750,35 +742,35 @@
   ;;;; Components
 
   ;;; Org
+  (with-eval-after-load 'org
 
   ;; Org
-  (with-eval-after-load 'org
-    (setq spaceline-org-clock-p t)
-    (setq org-display-custom-times t)
-    (setq org-time-stamp-custom-formats '("<%F %a>" . "<%F %a %H:%M>"))
-    (setq org-startup-with-inline-images t)
-    (setq org-catch-invisible-edits t)
-    (setq org-startup-folded 'content)
-    (setq org-use-speed-commands t)
-    (setq org-agenda-skip-scheduled-if-done t)
-    (setq org-agenda-skip-deadline-if-done t)
-    (setq org-agenda-include-deadlines t)
-    (setq org-agenda-include-diary t)
-    (setq org-archive-location "~/Google Drive/Org/Archive.org::")
-    (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
-    (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
-    (setq org-agenda-files (list
-                       "~/Google Drive/Org/Routines.org"
-                       "~/Google Drive/Org/TODOs.org"
-                       "~/Google Drive/Org/Projects.org"
-                       "~/Google Drive/Org/Notes.org"
-                       "~/Google Drive/Org/Timetable.org"
-                       ))
-    (setq org-agenda-time-grid
-          '((daily today require-timed)
-            "----------------"
-            (700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100)))
+  (setq org-want-todo-bindings t)
+  (setq  org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
+  (setq org-display-custom-times t)
+  (setq org-time-stamp-custom-formats '("<%F %a>" . "<%F %a %H:%M>"))
+  (setq org-startup-with-inline-images t)
+  (setq org-catch-invisible-edits t)
+  (setq org-startup-folded 'content)
+  (setq org-use-speed-commands t)
+  (setq org-archive-location "~/Google Drive/Org/Archive.org::")
+  (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
 
+  ;; Org-clock
+  (setq spaceline-org-clock-p t)
+  (setq org-clock-persist 'history)
+
+  ;; Org-journal
+  (setq org-journal-dir "~/Google Drive/Org/Journal/")
+  (setq org-journal-file-format "%F")
+
+  ;; Org-projectile
+  (require 'org-projectile)
+  (setq org-projectile-file "~/Google Drive/Org/Projects.org")
+  (push (org-projectile-todo-files) org-agenda-files)
+
+
+  ;; Org-capture
   (setq org-capture-templates
           '(("t" "Task" entry (file+headline "~/Google Drive/Org/TODOs.org" "Tasks")
              "** TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))\n %^{Effort}p \n")
@@ -795,8 +787,33 @@
             ("r" "redmine-issue" entry (file+headline "~/Google Drive/Org/TODOs.org" "Redmine Issue")
              "** TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))")
             ))
-  )
-  ;; Refresh org-agenda buffer automatically
+  ) ; with-eval-after-load 'org
+
+  ;; Org-agenda
+  (setq org-agenda-files (list
+                          "~/Google Drive/Org/Routines.org"
+                          "~/Google Drive/Org/TODOs.org"
+                          "~/Google Drive/Org/Projects.org"
+                          "~/Google Drive/Org/Notes.org"
+                          "~/Google Drive/Org/Timetable.org"
+                          ))
+
+  (setq org-agenda-time-grid
+        '((daily today require-timed)
+          "----------------"
+          (700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100)))
+
+  (setq org-agenda-skip-scheduled-if-done t)
+
+  (setq org-agenda-skip-deadline-if-done t)
+
+  (setq org-agenda-include-deadlines t)
+
+  (setq org-agenda-include-diary t)
+
+  (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
+
+  ; Refresh org-agenda buffer automatically
   (defun org-agenda-redo-in-other-window ()
     "Call org-agenda-redo function even in the non-agenda buffer."
     (interactive)

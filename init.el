@@ -887,10 +887,8 @@
            (:name "Waiting"
                   :todo "WAITING"
                   :order 20)
-           (:priority<= "C"
-                        :order 80)
            (:name "trivial"
-                  :priority<= "D"
+                  :priority<= "C"
                   :tag ("Trivial" "Unimportant")
                   :todo ("SOMEDAY" )
                   :order 90)

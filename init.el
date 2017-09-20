@@ -747,8 +747,10 @@
   ;; Org
   (setq org-want-todo-bindings t)
   (setq  org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
+
   (setq org-display-custom-times t)
   (setq org-time-stamp-custom-formats '("<%F %a>" . "<%F %a %H:%M>"))
+
   (setq org-startup-with-inline-images t)
   (setq org-catch-invisible-edits t)
   (setq org-startup-folded 'content)
@@ -804,14 +806,12 @@
           (700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100)))
 
   (setq org-agenda-skip-scheduled-if-done t)
-
   (setq org-agenda-skip-deadline-if-done t)
-
   (setq org-agenda-include-deadlines t)
-
   (setq org-agenda-include-diary t)
-
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
+  (setq org-agenda-custom-commands
+        '(("Z" "Simple agenda view" agenda "")))
 
   ; Refresh org-agenda buffer automatically
   (defun org-agenda-redo-in-other-window ()
@@ -907,12 +907,6 @@
   ;;; Mozc
   (global-set-key (kbd "C-SPC") 'mozc-mode)
   (global-set-key (kbd "M-SPC") 'set-mark-command)
-  ;(setq mozc-cursor-color-alist '((direct        . "blue")
-  ;                                (hiragana      . "green")
-  ;                                (full-katakana . "goldenrod")
-  ;                                (half-ascii    . "dark orchid")
-  ;                                (full-ascii    . "orchid")
-  ;                                (half-katakana . "dark goldenrod")))
   (setq quail-japanese-use-double-n t)               ; Double n = ん
   (setq mozc-candidate-style 'overlay)
 

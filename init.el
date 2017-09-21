@@ -42,7 +42,9 @@
      version-control
      git
      github
-     spell-checking
+     (spell-checking     :variables
+                         spell-checking-enable-by-default t
+                         spell-checking-enable-auto-dictionary t)
      syntax-checking
      better-defaults
      themes-megapack
@@ -778,7 +780,7 @@
              "** TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))\n %^{Effort}p \n")
             ("m" "Meeting" entry (file+headline "~/Google Drive/Org/TODOs.org" "Meetings")
              "** MEETING %?\n %u\n %a %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))")
-            ("j" "Journal" entry (file+datetree "~/Google Drive/Org/Journal-Desktop.org")
+            ("j" "Journal" entry (file+datetree "~/Google Drive/Org/Journal.org")
              "** %?\nEntered on %U\n  %i\n  %a")
             ("P" "pull-request-review" entry (file+headline "~/Google Drive/Org/TODOs.org" "Pull Requests")
              "** TODO %a %? :pr:\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))")
@@ -810,6 +812,7 @@
   (setq org-agenda-include-deadlines t)
   (setq org-agenda-include-diary t)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
+
   (setq org-agenda-custom-commands
         '(("Z" "Simple agenda view" agenda "")))
 

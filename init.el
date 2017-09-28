@@ -711,7 +711,10 @@
   (spacemacs/set-leader-keys (kbd "SPC o n /") 'Search-Notebooks)
 
 ;;*** Shutdown & reboot
-(spacemacs/set-leader-keys (kbd "SPC o q") (lambda () (interactive) (shell-command "safe-shutdown")))
+(defun Safe-Shutdown()
+  (interactive)
+  (shell-command "safe-shutdown"))
+(spacemacs/set-leader-keys (kbd "SPC o q") 'Safe-Shutdown)
 ;;** Mouse Bindings
 
 ;;** Faces, fonts, fontsets

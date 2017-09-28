@@ -881,7 +881,7 @@
   (setq org-journal-file-format "%F")
 
 ;;**** Org-projectile
-  ;(require 'org-projectile)
+  ;(use-package org-projectile)
   ;(setq org-projectile-file "~/Google Drive/Org/Projects.org")
 
 ;;**** Org-capture
@@ -926,32 +926,39 @@
   (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
-  (spacemacs|use-package-add-hook org-agenda-property
-    :post-config
-    (setq org-agenda-property-list '("LOCATION" "TEACHER") )
-    )
-  (setq org-agenda-property-position 'where-it-fits)
+
+
   (setq org-agenda-custom-commands (list(quote
         ("z" "Super zaen view" (
-          (todo "NEXT" ((org-agenda-overriding-header "Next to do")))
-          (agenda "" ((org-agenda-span 'day)
+                                (agenda "" ((org-agenda-span 'day)
+                                            (org-agenda-property-list '("LOCATION" "TEACHER") )
+                                            (org-agenda-property-position 'where-it-fits)
+                                            (org-agenda-property-separator "|" )
+
                       (org-super-agenda-groups
                        '((:name "Today"
                                 :time-grid t
                                 :date today
                                 :todo "TODAY"
                                 :scheduled today
-                                :order 2
+                                :order 1
                                 )))))
           (alltodo "" ((org-agenda-overriding-header "")
+                       (org-agenda-property-list '("LOCATION" "TEACHER") )
+                       (org-agenda-property-position 'where-it-fits)
+                       (org-agenda-property-separator "|" )
+
                        (org-super-agenda-groups
-                        '((:name "Important"
+                        '((:name "Next to do"
+                                 :todo "NEXT"
+                                 :order 1)
+                          (:name "Important"
                                  :tag "Important"
                                  :priority "A"
                                  :order 6)
                           (:name "Due Today"
                                  :deadline today
-                                 :order 1)
+                                 :order 2)
                           (:name "Due Soon"
                                  :deadline future
                                  :order 8)
@@ -966,17 +973,17 @@
                                  :order 12)
                           (:name "Projects"
                                  :tag "Project"
+                                 :order 14)
+                          (:name "Emacs"
+                                 :tag "Emacs"
                                  :order 13)
                           (:name "Research"
                                  :tag "Research"
                                  :order 15)
-                          (:name "Emacs"
-                                 :tag "Emacs"
-                                 :order 14)
-                          (:name "Routine"
-                                        ;:habit t
-                                 :tag ("Chore" "Routine" "Daily")
-                                 :order 11)
+                          (:name "To read"
+                                 :tag "Read"
+                                 :order 30)
+
                           (:order-multi (40 (:name "Done today"
                                                    :and (:regexp "State \"DONE\""
                                                                  :log t))
@@ -991,6 +998,7 @@
                                  :tag ("Trivial" "Unimportant")
                                  :todo ("SOMEDAY" )
                                  :order 90)
+                          (:discard (:tag ("Chore" "Routine" "Daily")))
                           ))
                        )))
          ) ; Super zaen view

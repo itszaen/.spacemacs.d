@@ -873,8 +873,8 @@
   (setq org-journal-file-format "%F")
 
 ;;**** Org-projectile
-  (require 'org-projectile)
-  (setq org-projectile-file "~/Google Drive/Org/Projects.org")
+  ;(require 'org-projectile)
+  ;(setq org-projectile-file "~/Google Drive/Org/Projects.org")
 
 ;;**** Org-capture
   (setq org-capture-templates

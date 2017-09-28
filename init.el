@@ -710,6 +710,8 @@
     (helm-find-files-1 "~/Google Drive/Notebooks/"))
   (spacemacs/set-leader-keys (kbd "SPC o n /") 'Search-Notebooks)
 
+;;*** Shutdown & reboot
+(spacemacs/set-leader-keys (kbd "SPC o q") (lambda () (interactive) (shell-command "safe-shutdown")))
 ;;** Mouse Bindings
 
 ;;** Faces, fonts, fontsets

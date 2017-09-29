@@ -727,9 +727,9 @@
 
 ;;*** Face
   (set-face-attribute 'mozc-cand-overlay-even-face 'nil
-                      :background "aquamarine" :foreground "black")
+                      :background "white" :foreground "black")
   (set-face-attribute 'mozc-cand-overlay-odd-face 'nil
-                      :background "aquamarine" :foreground "black")
+                      :background "white" :foreground "black")
 
 ;;*** Org font
   ;;(defun org-face-mode ()
@@ -764,7 +764,7 @@
   (golden-ratio-mode 0)
   (setq golden-ratio-auto-scale t)
 
-  (add-hook 'emacs-lisp-mode 'turn-on-orgstruct)
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-orgstruct)
 
   (beacon-mode 1)
 
@@ -818,12 +818,16 @@
   (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 
-;;*** Org-agenda-list on startup
-  (defun org-agenda-startup()
-    (interactive)
-    (org-agenda-list 1)
+;;*** Org-super-zaen-view on startup
+  (defun org-super-zaen-view(&optional arg)
+    (interactive "P")
+    (org-agenda arg "z"))
+
+  (defun org-super-zaen-view-startup()
+    (org-super-zaen-view)
     (switch-to-buffer "*Org Agenda*")
     (spacemacs/toggle-maximize-buffer)
+    (text-scale-increase)
     (get-buffer "*Org Agenda*")
    )
     ;; And the following in emacs-custom-settings
@@ -928,6 +932,7 @@
   (setq org-agenda-include-diary t)
   (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
+  (setq spacemacs-theme-org-agenda-height nil)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
 
 
@@ -1029,6 +1034,8 @@
 
   ) ; with-eval-after-load 'org
 
+;;*** Gnus
+(setq gnus-select-method '(nntp "news.gmane.org"))
 ;;*** Mozc
   (global-set-key (kbd "C-SPC") 'mozc-mode)
   (global-set-key (kbd "M-SPC") 'set-mark-command)
@@ -1041,7 +1048,7 @@
 
 
 
-;;*** Deft  Note taking mode
+;;*** Deft     Note taking mode
   (setq deft-extensions '("org" "md" "txt"))         ; add more to recognize more file formats.
   (setq deft-directory "~/Google Drive/Org/Notes")
 
@@ -1050,7 +1057,7 @@
   (setq twittering-reverse-mode t)                   ; Display tweets from the bottom of the buffer
   (setq twittering-use-icon-storage t)               ; Store the icons at .twittering-mode-icon.gz
 
-;;*** ERC   Emacs Internet Relay Chat Client
+;;*** ERC      Emacs Internet Relay Chat Client
 
 ;;*** Smooth-scrolling
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))) ;; two lines at a time
@@ -1065,7 +1072,7 @@
                                        "~/Projects/"
                                        ))
 
-;;*** EMMS  Emacs Multimedia System
+;;*** EMMS     Emacs Multimedia System
   (setq emms-source-file-default-directory "~/Music/")
 
 ;;*** Spaceline
@@ -1077,11 +1084,11 @@
   (setq projectile-switch-project-action 'neotree-projectile-action)
   (setq neo-vc-integration nil)
 
-;;*** Dired DIRectory EDitor
+;;*** Dired    DIRectory EDitor
 
 ;;*** Ranger
 
-;;*** EWW   Emacs Web Browser
+;;*** EWW      Emacs Web Browser
   (defvar eww-disable-colorize t)
   (defun shr-colorize-region--disable (orig start end fg &optional bg &rest _)
     (unless eww-disable-colorize
@@ -1190,7 +1197,7 @@ This function is called at the very end of Spacemacs initialization."
    (quote
     (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
  '(evil-want-Y-yank-to-eol t)
- '(initial-buffer-choice (quote org-agenda-startup))
+ '(initial-buffer-choice (quote org-super-zaen-view-startup))
  '(org-agenda-files
    (quote
     ("~/Google Drive/Org/TODOs.org" "~/Google Drive/Org/Routines.org" "~/Google Drive/Org/Projects.org" "~/Google Drive/Org/Notes.org" "~/Google Drive/Org/Timetable.org")))

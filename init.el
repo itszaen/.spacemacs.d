@@ -106,8 +106,6 @@
      ac-php
      mozc
      ac-mozc
-     ;mozc-popup
-     ;mozc-cursor-color
      multi-term
      emms
      gitter
@@ -130,6 +128,10 @@
                                            :repo alphapapa/org-protocol-capture-html
                                            ))
 
+     (beacon                    :location (recipe
+                                           :fetcher github
+                                           :repo Malabarba/beacon
+                                           ))
      color-theme-buffer-local
      load-theme-buffer-local
      per-buffer-theme
@@ -763,6 +765,9 @@
   (setq golden-ratio-auto-scale t)
 
   (add-hook 'emacs-lisp-mode 'turn-on-orgstruct)
+
+  (beacon-mode 1)
+
 ;;*** Show system name and currently editing file name in the title bar
   (setq frame-title-format
         (list (format "%s %%S --  %%j " (system-name))
@@ -845,6 +850,7 @@
   (spacemacs|diminish helm-gtags-mode)
   (spacemacs|diminish ggtags-mode)
   (spacemacs|diminish wakatime-mode)
+  (spacemacs|diminish beacon-mode)
   (with-eval-after-load 'emoji-cheat-sheet-plus
     (diminish 'emoji-cheat-sheet-plus-display-mode))
   (with-eval-after-load 'racer
@@ -878,7 +884,7 @@
   (setq org-journal-file-format "%F")
 
 ;;**** Org-projectile
-  ;(require 'org-projectile)
+  ;(use-package org-projectile)
   ;(setq org-projectile-file "~/Google Drive/Org/Projects.org")
 
 ;;**** Org-capture
@@ -923,95 +929,83 @@
   (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
-  (spacemacs|use-package-add-hook org-agenda-property
-:post-config
-    (setq org-agenda-property-list '("LOCATION" "TEACHER") )
-    )
-  (setq org-agenda-property-position 'where-it-fits)
-  (setq org-agenda-custom-commands
-        (list
-         (quote
-          ("z" "Super zaen view"
-           (
-            (agenda "" ((org-agenda-span 'day)
-                        (org-super-agenda-groups
-                         '((:name "Today"
-                                              :time-grid t
-                                              :date today
-                                              :todo "TODAY"
-                                              :scheduled today
-                                              :order 2
-                                             )))
-                        )
-                    )
-            (alltodo ""  ((org-agenda-overriding-header "")
-                          (org-super-agenda-groups
-                  '(
-                    (:name "Important"
-                           :tag "Important"
-                           :priority "A"
-                           :order 6
-                           )
-                    (:name "NEXT TO DO"
-                           :todo "NEXT"
-                           :order 3)
-                    (:name "Due Today"
-                           :deadline today
-                           :order 1
-                           )
-                    (:name "Due Soon"
-                           :deadline future
-                           :order 8
-                           )
-                    (:name "Overdue"
-                           :deadline past
-                           :order 7
-                           )
 
-                    (:name "Assignments"
-                           :tag "Assignment"
-                           :order 10)
-                    (:name "Issues"
-                           :tag "Issue"
-                           :order 12)
-                    (:name "Projects"
-                           :tag "Project"
-                           :order 13)
-                    (:name "Research"
-                           :tag "Research"
-                           :order 15)
-                    (:name "Emacs"
-                           :tag "Emacs"
-                           :order 14)
-                    (:name "Routine"
-                                        ;:habit t
-                           :tag ("Chore" "Routine" "Daily")
-                           :order 11
-                           )
-                    (:order-multi (40 (:name "Done today"
-                                             :and (:regexp "State \"DONE\""
-                                                           :log t)
-                                             )
-                                      (:name "Clocked today"
-                                             :log t
-                                             )
-                                      ))
-                    (:name "Waiting"
-                           :todo "WAITING"
-                           :order 20)
-                    (:name "trivial"
-                           :priority<= "C"
-                           :tag ("Trivial" "Unimportant")
-                           :todo ("SOMEDAY" )
-                           :order 90)
-                    )
-                  )
-))
 
-          )
-           ) ; Super agenda view
+  (setq org-agenda-custom-commands (list(quote
+        ("z" "Super zaen view" (
+                                (agenda "" ((org-agenda-span 'day)
+                                            (org-agenda-property-list '("LOCATION" "TEACHER") )
+                                            (org-agenda-property-position 'where-it-fits)
+                                            (org-agenda-property-separator "|" )
 
-          )))
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                                :time-grid t
+                                :date today
+                                :todo "TODAY"
+                                :scheduled today
+                                :order 1
+                                )))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-agenda-property-list '("LOCATION" "TEACHER") )
+                       (org-agenda-property-position 'where-it-fits)
+                       (org-agenda-property-separator "|" )
+
+                       (org-super-agenda-groups
+                        '((:name "Next to do"
+                                 :todo "NEXT"
+                                 :order 1)
+                          (:name "Important"
+                                 :tag "Important"
+                                 :priority "A"
+                                 :order 6)
+                          (:name "Due Today"
+                                 :deadline today
+                                 :order 2)
+                          (:name "Due Soon"
+                                 :deadline future
+                                 :order 8)
+                          (:name "Overdue"
+                                 :deadline past
+                                 :order 7)
+                          (:name "Assignments"
+                                 :tag "Assignment"
+                                 :order 10)
+                          (:name "Issues"
+                                 :tag "Issue"
+                                 :order 12)
+                          (:name "Projects"
+                                 :tag "Project"
+                                 :order 14)
+                          (:name "Emacs"
+                                 :tag "Emacs"
+                                 :order 13)
+                          (:name "Research"
+                                 :tag "Research"
+                                 :order 15)
+                          (:name "To read"
+                                 :tag "Read"
+                                 :order 30)
+
+                          (:order-multi (40 (:name "Done today"
+                                                   :and (:regexp "State \"DONE\""
+                                                                 :log t))
+                                            (:name "Clocked today"
+                                                   :log t
+                                                   )))
+                          (:name "Waiting"
+                                 :todo "WAITING"
+                                 :order 20)
+                          (:name "trivial"
+                                 :priority<= "C"
+                                 :tag ("Trivial" "Unimportant")
+                                 :todo ("SOMEDAY" )
+                                 :order 90)
+                          (:discard (:tag ("Chore" "Routine" "Daily")))
+                          ))
+                       )))
+         ) ; Super zaen view
+        )))
   ;; (defun org-agenda-super-agenda()
   ;;   (interactive "P")
   ;;   (org-agenda arg "s"))
@@ -1057,6 +1051,11 @@
   (setq twittering-use-icon-storage t)               ; Store the icons at .twittering-mode-icon.gz
 
 ;;*** ERC   Emacs Internet Relay Chat Client
+
+;;*** Smooth-scrolling
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))) ;; two lines at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't)
 
 ;;*** Gitter
   (setq gitter-token "b82daddc46dc27391e313e8dc6dcc07d6c079ccf")
@@ -1197,7 +1196,7 @@ This function is called at the very end of Spacemacs initialization."
     ("~/Google Drive/Org/TODOs.org" "~/Google Drive/Org/Routines.org" "~/Google Drive/Org/Projects.org" "~/Google Drive/Org/Notes.org" "~/Google Drive/Org/Timetable.org")))
  '(package-selected-packages
    (quote
-    (org-web-tools org-agenda-property plantuml-mode google-maps org-protocol-capture-html pug-mode inflections white-sand-theme symon string-inflection ruby-refactor test-simple loc-changes load-relative password-generator org-journal impatient-mode helm-purpose window-purpose imenu-list godoctor go-rename flycheck-bashate exotica-theme editorconfig company-php company-lua cmake-ide levenshtein browse-at-remote yascroll org-super-agenda org-redmine org-alert ac-php pyvenv mu4e-alert hy-mode geiser magit yasnippet company spaceline-all-the-icons github-search company-go markdown-mode magit-popup git-commit alert slime web-mode rebecca-theme realgud pyim pyenv-mode projectile-rails orgit org-brain mmm-mode magithub ghub+ apiwrap ghub live-py-mode evil-org evil-lion esh-help alchemist ac-php-core flycheck multiple-cursors org-projectile-helm org-category-capture minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (beacon org-web-tools org-agenda-property plantuml-mode google-maps org-protocol-capture-html pug-mode inflections white-sand-theme symon string-inflection ruby-refactor test-simple loc-changes load-relative password-generator org-journal impatient-mode helm-purpose window-purpose imenu-list godoctor go-rename flycheck-bashate exotica-theme editorconfig company-php company-lua cmake-ide levenshtein browse-at-remote yascroll org-super-agenda org-redmine org-alert ac-php pyvenv mu4e-alert hy-mode geiser magit yasnippet company spaceline-all-the-icons github-search company-go markdown-mode magit-popup git-commit alert slime web-mode rebecca-theme realgud pyim pyenv-mode projectile-rails orgit org-brain mmm-mode magithub ghub+ apiwrap ghub live-py-mode evil-org evil-lion esh-help alchemist ac-php-core flycheck multiple-cursors org-projectile-helm org-category-capture minibuffer-line gitter per-buffer-theme load-theme-buffer-local color-theme-buffer-local color-theme emms ox-twbs ox-gfm org-notebook ox-reveal erc-yt erc-view-log erc-social-graph erc-image erc-hl-nicks emoji-cheat-sheet-plus company-emoji elfeed-goodies elfeed-org elfeed restclient epc wakatime-mode typit mmt sudoku spray slack emojify circe oauth2 ranger pangu-spacing pandoc-mode pacmacs ox-pandoc insert-shebang fish-mode find-by-pinyin-dired company-shell chinese-pyim chinese-pyim-basedict ace-pinyin pinyinlib 2048-game pdf-tools tablist ledger-mode gmail-message-mode ham-mode html-to-markdown flymd flycheck-ledger edit-server zonokai-theme zenburn-theme zen-and-art-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme toml-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme systemd sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rainbow-mode rainbow-identifiers railscasts-theme racer purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme pastels-on-dark-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme niflheim-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flycheck-rust seq flatui-theme flatland-theme firebelly-theme farmhouse-theme espresso-theme ein deferred websocket dracula-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-identifiers-mode clues-theme cherry-blossom-theme cargo rust-mode busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme autotetris-mode persp-projectile twittering-mode github-browse-file ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(wakatime-python-bin nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

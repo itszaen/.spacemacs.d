@@ -757,111 +757,6 @@
   ;;                   'katakana-jisx0201
   ;;                   (cons "Source Han Sans JP Light" "iso10646-1"))
 
-
-
-;;** Behavior
-;;*** Minor-modes
-  (golden-ratio-mode 0)
-  (setq golden-ratio-auto-scale t)
-
-  (add-hook 'emacs-lisp-mode-hook 'turn-on-orgstruct)
-
-  (beacon-mode 1)
-
-;;*** Show system name and currently editing file name in the title bar
-  (setq frame-title-format
-        (list (format "%s %%S --  %%j " (system-name))
-              '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
-
-;;*** Default Browser
-  (setq browse-url-browser-function 'browse-url-chromium)
-
-;;*** Default frame
-  (add-to-list 'default-frame-alist '(fullscreen . maximized)) ; Maximized by default
-  (setq frame-resize-pixelwise t)                              ; Fix the gap
-
-;;*** Save Desktop
-  (desktop-save-mode 0)
-
-;;*** Delete region
-  (delete-selection-mode 1)
-
-;;*** Scroll Bar (yascroll)
-  (global-yascroll-bar-mode 1)
-
-;;*** Modeline
-;;**** mode line time stamp
-  (setq display-time-day-and-date t)
-  (setq display-time-24hr-format t)
-  (setq display-time-format "%m/%d %T")              ; Month/Day Hour:Minute:Second
-  (setq display-time-interval 1)               ; update every second
-;;**** No load average
-  (setq display-time-default-load-average nil)
-;;**** No "Mail"
-  (setq display-time-mail-string "")
-  (display-time-mode 1)
-;;**** all-the-icons theme
-  (with-eval-after-load 'spaceline
-  (spacemacs|use-package-add-hook spaceline-all-the-icons
-    :post-config
-    (spaceline-all-the-icons)
-    (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
-    (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
-    (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
-    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
-    (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
-    )
-  )
-
-;;*** Open *.foo in foo-mode
-  ;;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
-  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-
-;;*** Org-super-zaen-view on startup
-  (defun org-super-zaen-view(&optional arg)
-    (interactive "P")
-    (org-agenda arg "z"))
-
-  (defun org-super-zaen-view-startup()
-    (org-super-zaen-view)
-    (switch-to-buffer "*Org Agenda*")
-    (spacemacs/toggle-maximize-buffer)
-    (text-scale-increase)
-    (get-buffer "*Org Agenda*")
-   )
-    ;; And the following in emacs-custom-settings
-    ;; '(initial-buffer-choice (quote org-agenda-startup))
-
-;;** Diminishing
-
-;;*** Diminish Errors (buffer-read-only, beginning-of-buffer, end-of-buffer)
-  (defun command-error-function-no-buffer-error (data context caller)
-    "Ignore the buffer-read-only signal; pass the rest to the default handler."
-    (when (not (eq (car data) '(buffer-read-only
-                                beginning-of-buffer
-                                end-of-buffer
-                                )))
-      (command-error-default-function data context caller)))
-      (setq command-error-function #'command-error-function-no-buffer-error)
-
-;;*** Diminish spaceline indications
-  (spacemacs|diminish holy-mode)
-  (spacemacs|diminish hybrid-mode)
-  (spacemacs|diminish which-key-mode)
-  (spacemacs|diminish auto-completion-mode)
-  (spacemacs|diminish evil-mc-mode)
-  (spacemacs|diminish helm-gtags-mode)
-  (spacemacs|diminish ggtags-mode)
-  (spacemacs|diminish wakatime-mode)
-  (spacemacs|diminish beacon-mode)
-  (with-eval-after-load 'emoji-cheat-sheet-plus
-    (diminish 'emoji-cheat-sheet-plus-display-mode))
-  (with-eval-after-load 'racer
-    (diminish 'racer-mode))
-  (with-eval-after-load 'command-log-mode
-    (diminish 'command-log-mode))
-
 ;;** Components
 ;;*** Org
   (with-eval-after-load 'org
@@ -938,24 +833,22 @@
 
   (setq org-agenda-custom-commands (list(quote
         ("z" "Super zaen view" (
-                                (agenda "" ((org-agenda-span 'day)
-                                            (org-agenda-property-list '("LOCATION" "TEACHER") )
-                                            (org-agenda-property-position 'where-it-fits)
-                                            (org-agenda-property-separator "|" )
-
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                                :time-grid t
-                                :date today
-                                :todo "TODAY"
-                                :scheduled today
-                                :order 1
-                                )))))
+           (agenda "" ((org-agenda-span 'day)
+                       (org-agenda-property-list '("LOCATION" "TEACHER") )
+                       (org-agenda-property-position 'where-it-fits)
+                       (org-agenda-property-separator "|" )
+                       (org-super-agenda-groups
+                        '((:name "Today"
+                                 :time-grid t
+                                 :date today
+                                 :todo "TODAY"
+                                 :scheduled today
+                                 :order 1
+                                 )))))
           (alltodo "" ((org-agenda-overriding-header "")
                        (org-agenda-property-list '("LOCATION" "TEACHER") )
                        (org-agenda-property-position 'where-it-fits)
                        (org-agenda-property-separator "|" )
-
                        (org-super-agenda-groups
                         '((:name "Next to do"
                                  :todo "NEXT"
@@ -992,7 +885,10 @@
                                  :tag "Read"
                                  :order 30)
 
-                          (:order-multi (40 (:name "Done today"
+                          (:name "Kerbal Space Program"
+                                 :tag "KSP"
+                                 :order 29)
+                          (:order-multi (80 (:name "Done today"
                                                    :and (:regexp "State \"DONE\""
                                                                  :log t))
                                             (:name "Clocked today"
@@ -1000,7 +896,15 @@
                                                    )))
                           (:name "Waiting"
                                  :todo "WAITING"
-                                 :order 20)
+                                 :order 9)
+
+                          (:name "Mathematics"
+                                 :tag "Maths"
+                                 :order 40)
+                          (:name "Science"
+                                 :tag ("Science" "Physics")
+                                 :order 41)
+
                           (:name "trivial"
                                  :priority<= "C"
                                  :tag ("Trivial" "Unimportant")
@@ -1011,11 +915,6 @@
                        )))
          ) ; Super zaen view
         )))
-  ;; (defun org-agenda-super-agenda()
-  ;;   (interactive "P")
-  ;;   (org-agenda arg "s"))
-  ;; (with-eval-after-load 'org-agenda
-  ;; (define-key org-agenda-mode-map (kbd "<f8>") 'org-agenda-super-agenda))
 
 ;;***** Refresh org-agenda buffer automatically
   (defun org-agenda-redo-in-other-window ()
@@ -1108,6 +1007,121 @@
   (setq browse-url-generic-program (executable-find "chromium"))
   (setq shr-external-browser 'browse-url-generic)
 
+
+
+;;** Behavior
+;;*** Minor-modes
+  (golden-ratio-mode 0)
+  (setq golden-ratio-auto-scale t)
+
+  (add-hook 'emacs-lisp-mode-hook 'turn-on-orgstruct)
+
+  (beacon-mode 1)
+
+;;*** Show system name and currently editing file name in the title bar
+  (setq frame-title-format
+        (list (format "%s %%S --  %%j " (system-name))
+              '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+
+;;*** Default Browser
+  (setq browse-url-browser-function 'browse-url-chromium)
+
+;;*** Default frame
+  (add-to-list 'default-frame-alist '(fullscreen . maximized)) ; Maximized by default
+  (setq frame-resize-pixelwise t)                              ; Fix the gap
+
+;;*** Save Desktop
+  (desktop-save-mode 0)
+
+;;*** Delete region
+  (delete-selection-mode 1)
+
+;;*** Scroll Bar (yascroll)
+  (global-yascroll-bar-mode 1)
+
+;;*** Modeline
+;;**** mode line time stamp
+  (setq display-time-day-and-date t)
+  (setq display-time-24hr-format t)
+  (setq display-time-format "%m/%d %T")              ; Month/Day Hour:Minute:Second
+  (setq display-time-interval 1)               ; update every second
+;;**** No load average
+  (setq display-time-default-load-average nil)
+;;**** No "Mail"
+  (setq display-time-mail-string "")
+  (display-time-mode 1)
+;;**** all-the-icons theme
+  (with-eval-after-load 'spaceline
+  (spacemacs|use-package-add-hook spaceline-all-the-icons
+    :post-config
+    (spaceline-all-the-icons)
+    (spaceline-all-the-icons--setup-anzu)            ;; Enable anzu searching
+    (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
+    (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream in git
+    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
+    (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+    )
+  )
+
+;;*** Open *.foo in foo-mode
+  ;;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+
+;;*** Org-super-zaen-view on startup
+(with-eval-after-load 'org
+(defun org-super-zaen-view(&optional arg)
+    (interactive "P")
+    (org-agenda arg "z"))
+
+  (defun org-super-zaen-view-startup()
+    (org-super-zaen-view)
+    (switch-to-buffer "*Org Agenda*")
+    (spacemacs/toggle-maximize-buffer)
+    (text-scale-increase)
+    ;(get-buffer "*Org Agenda*")
+
+    (split-window-right)
+    (other-window 1)
+    (find-file "~/Google Drive/Org/TODOs.org")
+    (split-window-below)
+    (other-window 1)
+    (find-file "~/Google Drive/Org/Projects.org")
+   )
+(org-super-zaen-view-startup)
+)
+    ;; And the following in emacs-custom-settings
+    ;; '(initial-buffer-choice (quote org-agenda-startup))
+
+;;** Diminishing
+
+;;*** Diminish Errors (buffer-read-only, beginning-of-buffer, end-of-buffer)
+  (defun command-error-function-no-buffer-error (data context caller)
+    "Ignore the buffer-read-only signal; pass the rest to the default handler."
+    (when (not (eq (car data) '(buffer-read-only
+                                beginning-of-buffer
+                                end-of-buffer
+                                )))
+      (command-error-default-function data context caller)))
+      (setq command-error-function #'command-error-function-no-buffer-error)
+
+;;*** Diminish spaceline indications
+  (spacemacs|diminish holy-mode)
+  (spacemacs|diminish hybrid-mode)
+  (spacemacs|diminish which-key-mode)
+  (spacemacs|diminish auto-completion-mode)
+  (spacemacs|diminish evil-mc-mode)
+  (spacemacs|diminish helm-gtags-mode)
+  (spacemacs|diminish ggtags-mode)
+  (spacemacs|diminish wakatime-mode)
+  (spacemacs|diminish beacon-mode)
+  (with-eval-after-load 'emoji-cheat-sheet-plus
+    (diminish 'emoji-cheat-sheet-plus-display-mode))
+  (with-eval-after-load 'racer
+    (diminish 'racer-mode))
+  (with-eval-after-load 'command-log-mode
+    (diminish 'command-log-mode))
+
 ;;** Layouts
 
   (spacemacs|define-custom-layout "@Chats"
@@ -1197,7 +1211,7 @@ This function is called at the very end of Spacemacs initialization."
    (quote
     (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
  '(evil-want-Y-yank-to-eol t)
- '(initial-buffer-choice (quote org-super-zaen-view-startup))
+ ;'(initial-buffer-choice (quote org-super-zaen-view-startup))
  '(org-agenda-files
    (quote
     ("~/Google Drive/Org/TODOs.org" "~/Google Drive/Org/Routines.org" "~/Google Drive/Org/Projects.org" "~/Google Drive/Org/Notes.org" "~/Google Drive/Org/Timetable.org")))

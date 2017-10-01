@@ -827,6 +827,8 @@
   (setq org-agenda-include-diary t)
   (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
+  (setq org-agenda-start-with-log-mode t)
+
   (setq spacemacs-theme-org-agenda-height nil)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
 
@@ -849,7 +851,7 @@
                        (org-agenda-property-list '("LOCATION" "TEACHER") )
                        (org-agenda-property-position 'where-it-fits)
                        (org-agenda-property-separator "|" )
-                       (org-super-agenda-groups
+                         (org-super-agenda-groups
                         '((:name "Next to do"
                                  :todo "NEXT"
                                  :order 1)
@@ -912,7 +914,8 @@
                                  :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))
                           ))
-                       )))
+
+                                              )))
          ) ; Super zaen view
         )))
 
@@ -929,6 +932,7 @@
   (spacemacs|use-package-add-hook org-agenda
     :post-config
     (org-super-agenda-mode t)
+
        )
 
   ) ; with-eval-after-load 'org
@@ -1075,21 +1079,25 @@
     (org-agenda arg "z"))
 
   (defun org-super-zaen-view-startup()
+    (interactive)
     (org-super-zaen-view)
-    (switch-to-buffer "*Org Agenda*")
-    (spacemacs/toggle-maximize-buffer)
-    (text-scale-increase)
     ;(get-buffer "*Org Agenda*")
 
-    (split-window-right)
-    (other-window 1)
-    (find-file "~/Google Drive/Org/TODOs.org")
-    (split-window-below)
-    (other-window 1)
-    (find-file "~/Google Drive/Org/Projects.org")
-   )
+    (switch-to-buffer "*Org Agenda*")
+    ;; (spacemacs/toggle-maximize-buffer)
+    ;; (text-scale-increase)
+
+    ;; (split-window-right)
+    ;; (other-window 1)
+    ;; (find-file "~/Google Drive/Org/TODOs.org")
+    ;; (split-window-below)
+    ;; (other-window 1)
+    ;; (find-file "~/Google Drive/Org/Projects.org")
+    )
 (org-super-zaen-view-startup)
+
 )
+
     ;; And the following in emacs-custom-settings
     ;; '(initial-buffer-choice (quote org-agenda-startup))
 

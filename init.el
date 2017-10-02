@@ -828,6 +828,9 @@
   (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
   (setq org-agenda-start-with-log-mode t)
+  (setq org-agenda-property-list '("LOCATION" "TEACHER") )
+  (setq org-agenda-property-position 'where-it-fits)
+  (setq org-agenda-property-separator "|" )
 
   (setq spacemacs-theme-org-agenda-height nil)
   (add-hook 'org-agenda-mode-hook '(lambda() (hl-line-mode 1)))
@@ -852,7 +855,7 @@
                        (org-agenda-property-position 'where-it-fits)
                        (org-agenda-property-separator "|" )
                          (org-super-agenda-groups
-                        '((:name "Next to do"
+                        '((:name "NEXT TO DO"
                                  :todo "NEXT"
                                  :order 1)
                           (:name "Important"
@@ -1082,8 +1085,7 @@
     (interactive)
     (org-super-zaen-view)
     ;(get-buffer "*Org Agenda*")
-
-    (switch-to-buffer "*Org Agenda*")
+    (switch-to-buffer "#<buffer *Org Agenda*>")
     ;; (spacemacs/toggle-maximize-buffer)
     ;; (text-scale-increase)
 

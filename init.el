@@ -5,17 +5,13 @@
 ;;** Layers
 (defun dotspacemacs/layers ()
   (setq-default
-
    dotspacemacs-distribution 'spacemacs
-
    dotspacemacs-enable-lazy-installation 'unused
-
    dotspacemacs-ask-for-lazy-installation nil
-
    dotspacemacs-configuration-layer-path '("~/.spacemacs.d/layers/")
-
    dotspacemacs-configuration-layers
    '(
+     my-spaceline-all-the-icons
      ruby
      ruby-on-rails
      python
@@ -152,27 +148,18 @@
      )
 
    dotspacemacs-install-packages 'used-only
-
 ))
 
 ;;* Init
 (defun dotspacemacs/init ()
   (setq-default
-
    dotspacemacs-elpa-https t
-
    dotspacemacs-elpa-timeout 10
-
    dotspacemacs-check-for-update nil
-
    dotspacemacs-elpa-subdirectory nil
-
    dotspacemacs-editing-style 'hybrid
-
    dotspacemacs-verbose-loading t
-
    dotspacemacs-startup-banner 'official
-
    ;; `recents' `bookmarks' `projects' `agenda' `todos'
    dotspacemacs-startup-lists '(
                                 (agenda . 0)
@@ -181,19 +168,14 @@
                                 (bookmarks . 5)
                                 (todos . 0)
                                 )
-
    dotspacemacs-startup-buffer-responsive t
-
    dotspacemacs-scratch-mode 'text-mode
-
    dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light
                          leuven
                          zenburn
                          )
-
    dotspacemacs-colorize-cursor-according-to-state t
-
    dotspacemacs-default-font '("Source Han Code JP"
                                :size 12
                                :weight normal
@@ -201,79 +183,45 @@
                                :powerline-scale 1.2)
 
    dotspacemacs-leader-key "SPC"
-
    dotspacemacs-emacs-command-key "SPC"
-
    dotspacemacs-ex-command-key ":"
-
    dotspacemacs-emacs-leader-key "M-m"
-
    dotspacemacs-major-mode-leader-key ","
-
    dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-
    dotspacemacs-distinguish-gui-tab t
-
    dotspacemacs-remap-Y-to-y$ t ; yy = copy entire line, Y(y$) = C-k but copy
-
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
    ;; there. (default t)
    dotspacemacs-retain-visual-state-on-shift t
-
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
    dotspacemacs-visual-line-move-text nil
-
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
-
    dotspacemacs-default-layout-name "Master"
-
    dotspacemacs-display-default-layout t
-
    dotspacemacs-auto-resume-layouts nil
-
    dotspacemacs-large-file-size 1 		             ; in MB
-
    dotspacemacs-auto-save-file-location 'cache
-
    dotspacemacs-max-rollback-slots 20
-
    dotspacemacs-helm-resize nil
-
    dotspacemacs-helm-no-header nil
-
    dotspacemacs-helm-position 'bottom
-
    dotspacemacs-helm-use-fuzzy 'always
-
    dotspacemacs-enable-paste-transient-state nil   ; C-j, C-k replace the text with older/newer yanks.
-
    dotspacemacs-which-key-delay 0.4
-
    dotspacemacs-which-key-position 'bottom
-
    dotspacemacs-loading-progress-bar t
-
    dotspacemacs-fullscreen-at-startup nil
-
    dotspacemacs-fullscreen-use-non-native nil
-
    dotspacemacs-maximized-at-startup t
-
    dotspacemacs-active-transparency 90
-
    dotspacemacs-inactive-transparency 90
-
    dotspacemacs-show-transient-state-title t
-
    dotspacemacs-show-transient-state-color-guide t
-
    dotspacemacs-mode-line-unicode-symbols nil
-
    dotspacemacs-smooth-scrolling t
-
    dotspacemacs-line-numbers  '(:relative nil
                                 :disabled-for-modes dired-mode
                                                     doc-view-mode
@@ -283,21 +231,13 @@
                                                     text-mode
                                                     spacemacs-buffer-mode
                                 :size-limit-kb 1000)
-
    dotspacemacs-folding-method 'evil
-
    dotspacemacs-smartparens-strict-mode t
-
    dotspacemacs-smart-closing-parenthesis t
-
    dotspacemacs-highlight-delimiters 'all
-
    dotspacemacs-persistent-server t
-
    dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
-
    dotspacemacs-default-package-repository nil  ; Not used for now.
-
    dotspacemacs-whitespace-cleanup 'trailing
    ))
 
@@ -534,6 +474,17 @@
     )
   (spacemacs/set-leader-keys (kbd "SPC o a") 'Org-Agenda-buffer)
 
+;;*** Org-agenda with todo files
+(defun Org-Agenda-Setup()
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (find-file "~/Google Drive/Org/TODOs.org")
+  (split-window-below)
+  (other-window 1)
+  (find-file "~/Google Drive/Org/Projects.org")
+  )
+(spacemacs/set-leader-keys (kbd "SPC o A") 'Org-Agenda-Setup)
 ;;*** Org-TODO files
   (spacemacs/declare-prefix "o t" "Org-files")
   (defun TODOs ()
@@ -762,8 +713,8 @@
   (with-eval-after-load 'org
 ;;**** Org-mode
   (setq org-want-todo-bindings t)
-  (setq  org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
-
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WORKING(o)" "WAITING(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
+  (setq org-todo-keyword-faces '(("WORKING" . "red")("WAITING" . "yellow")("SOMEDAY" . "gray")("CANCELED" . "black")))
   (setq org-display-custom-times t)
   (setq org-time-stamp-custom-formats '("<%F %a>" . "<%F %a %H:%M>"))
 
@@ -855,7 +806,10 @@
                        (org-agenda-property-position 'where-it-fits)
                        (org-agenda-property-separator "|" )
                          (org-super-agenda-groups
-                        '((:name "NEXT TO DO"
+                          '((:name "WORKING ON"
+                                   :todo "WORKING"
+                                   :order 0)
+                            (:name "NEXT TO DO"
                                  :todo "NEXT"
                                  :order 1)
                           (:name "Important"
@@ -887,18 +841,23 @@
                                  :tag "Research"
                                  :order 15)
                           (:name "To read"
-                                 :tag "Read"
+                                 :and(:tag "Read"
+                                 :not (:todo "SOMEDAY"))
+                                 :order 35
+                                 )
+                          (:name "To Remember"
+                                 :tag "Remember"
                                  :order 30)
-
+                          (:name "Piano"
+                                 :tag "Piano"
+                                 :order 25)
+                          (:name "Guitar"
+                                 :tag "Guitar"
+                                 :order 26
+                                 )
                           (:name "Kerbal Space Program"
                                  :tag "KSP"
                                  :order 29)
-                          (:order-multi (80 (:name "Done today"
-                                                   :and (:regexp "State \"DONE\""
-                                                                 :log t))
-                                            (:name "Clocked today"
-                                                   :log t
-                                                   )))
                           (:name "Waiting"
                                  :todo "WAITING"
                                  :order 9)
@@ -1084,19 +1043,19 @@
   (defun org-super-zaen-view-startup()
     (interactive)
     (org-super-zaen-view)
-    ;(get-buffer "*Org Agenda*")
-    (switch-to-buffer "#<buffer *Org Agenda*>")
-    ;; (spacemacs/toggle-maximize-buffer)
+    (spacemacs/toggle-maximize-buffer)
+    (get-buffer "*Org Agenda*")
+    ;(switch-to-buffer "#<buffer *Org Agenda*>")
     ;; (text-scale-increase)
 
-    ;; (split-window-right)
-    ;; (other-window 1)
-    ;; (find-file "~/Google Drive/Org/TODOs.org")
-    ;; (split-window-below)
-    ;; (other-window 1)
-    ;; (find-file "~/Google Drive/Org/Projects.org")
+    (split-window-right)
+    (other-window 1)
+    (find-file "~/Google Drive/Org/TODOs.org")
+    (split-window-below)
+    (other-window 1)
+    (find-file "~/Google Drive/Org/Projects.org")
     )
-(org-super-zaen-view-startup)
+;(org-super-zaen-view-startup)
 
 )
 
@@ -1221,7 +1180,7 @@ This function is called at the very end of Spacemacs initialization."
    (quote
     (name old-name general-category canonical-combining-class bidi-class decomposition decimal-digit-value digit-value numeric-value mirrored iso-10646-comment uppercase lowercase titlecase)))
  '(evil-want-Y-yank-to-eol t)
- ;'(initial-buffer-choice (quote org-super-zaen-view-startup))
+ '(initial-buffer-choice (quote org-super-zaen-view-startup))
  '(org-agenda-files
    (quote
     ("~/Google Drive/Org/TODOs.org" "~/Google Drive/Org/Routines.org" "~/Google Drive/Org/Projects.org" "~/Google Drive/Org/Notes.org" "~/Google Drive/Org/Timetable.org")))

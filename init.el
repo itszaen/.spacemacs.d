@@ -477,6 +477,8 @@
 ;;*** Org-agenda with todo files
 (defun Org-Agenda-Setup()
   (interactive)
+  (Org-Agenda-buffer)
+  (spacemacs/toggle-maximize-buffer)
   (split-window-right)
   (other-window 1)
   (find-file "~/Google Drive/Org/TODOs.org")
@@ -509,14 +511,26 @@
 (defun Fun ()
   (interacrive)
   (find-file "~/Google Drive/Org/Fun.org"))
+(defun Prep ()
+  (interactive)
+  (find-file "~/Google Drive/Org/Prep.org"))
+(defun Emacs ()
+  (interactive)
+  (find-file "~/Google Drive/Org/Emacs.org"))
+(defun Books ()
+  (interactive)
+  (find-file "~/Google Drive/Org/Books.org"))
+(spacemacs/set-leader-keys (kbd "SPC o t t") 'TODOs)
+(spacemacs/set-leader-keys (kbd "SPC o t r") 'Routines)
+(spacemacs/set-leader-keys (kbd "SPC o t T") 'Timetable)
+(spacemacs/set-leader-keys (kbd "SPC o t e") 'Emacs)
+(spacemacs/set-leader-keys (kbd "SPC o t a") 'Archive)
+(spacemacs/set-leader-keys (kbd "SPC o t p") 'Projects)
+(spacemacs/set-leader-keys (kbd "SPC o t s") 'Study)
+(spacemacs/set-leader-keys (kbd "SPC o t f") 'Fun)
+(spacemacs/set-leader-keys (kbd "SPC o t P") 'Prep)
+(spacemacs/set-leader-keys (kbd "SPC o t b") 'Books)
 
-  (spacemacs/set-leader-keys (kbd "SPC o t t") 'TODOs)
-  (spacemacs/set-leader-keys (kbd "SPC o t r") 'Routines)
-  (spacemacs/set-leader-keys (kbd "SPC o t T") 'Timetable)
-  (spacemacs/set-leader-keys (kbd "SPC o t a") 'Archive)
-  (spacemacs/set-leader-keys (kbd "SPC o t p") 'Projects)
-  (spacemacs/set-leader-keys (kbd "SPC o t s") 'Study)
-  (spacemacs/set-leader-keys (kbd "SPC o t f") 'Fun)
 ;;*** Notebooks
   (spacemacs/declare-prefix "o n" "Notebook")
   (spacemacs/declare-prefix "o n h" "History")
@@ -773,6 +787,9 @@
                           "~/Google Drive/Org/Projects.org"
                           "~/Google Drive/Org/Notes.org"
                           "~/Google Drive/Org/Timetable.org"
+                          "~/Google Drive/Org/Books.org"
+                          "~/Google Drive/Org/Emacs.org"
+                          "~/Google Drive/Org/Prep.org"
                           "~/Google Drive/Org/Fun.org"
                           "~/Google Drive/Org/Study.org"
                           ))
@@ -851,7 +868,7 @@
                                  :tag "Research"
                                  :order 15)
                           (:name "To read"
-                                 :and(:tag "Read"
+                                 :and(:tag ("Read" "Book")
                                  :not (:todo "SOMEDAY"))
                                  :order 35
                                  )

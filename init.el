@@ -692,6 +692,11 @@
     (helm-find-files-1 "~/Google Drive/Notebooks/"))
   (spacemacs/set-leader-keys (kbd "SPC o n /") 'Search-Notebooks)
 
+;;*** Switch to project layout
+(defun Init ()
+    (interactive)
+  (spacemacs/helm-persp-switch-project "~/Projects/dotspacemacs"))
+(spacemacs/set-leader-keys (kbd "SPC o i") 'Init)
 ;;*** Shutdown & reboot
 (defun Safe-Shutdown()
   (interactive)

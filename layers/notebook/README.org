@@ -1,0 +1,40 @@
+#+TITLE: notebook layer
+
+# The maximum height of the logo should be 200 pixels.
+[[img/notebook.png]]
+
+# TOC links should be GitHub style anchors.
+* Table of Contents                                        :TOC_4_gh:noexport:
+- [[#to-note][TO NOTE]]
+- [[#description][Description]]
+  - [[#features][Features:]]
+- [[#install][Install]]
+- [[#key-bindings][Key bindings]]
+
+* TO NOTE
+This layer is yet merely a personal experiment of Zaen. DO NOT USE IT!
+
+* Description
+This layer provides an (onenote-like) environment to take notes efficiently.
+It is not coming from any packages that works without spacemacs, you have to enable persp mode, org mode, neotree mode in order to use it properly.
+
+** Features:
+  - Able to set a whole different face for note taking
+  - Text export and other facilities via org-notebook
+
+* Install
+To use this configuration layer, add it to your =~/.spacemacs=. You will need to
+add =notebook= to the existing =dotspacemacs-configuration-layers= list in this
+file.
+
+* Key bindings
+
+| Key Binding | Description                 |
+|-------------+-----------------------------|
+| ~SPC l o n~ | Create a new notebook layer |
+
+# Use GitHub URLs if you wish to link a Spacemacs documentation file or its heading.
+# Examples:
+# [[https://github.com/syl20bnr/spacemacs/blob/master/doc/VIMUSERS.org#sessions]]
+# [[https://github.com/syl20bnr/spacemacs/blob/master/layers/%2Bfun/emoji/README.org][Link to Emoji layer README.org]]
+# If space-doc-mode is enabled, Spacemacs will open a local copy of the linked file.

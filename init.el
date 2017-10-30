@@ -36,7 +36,9 @@
      ipython-notebook
      systemd
 
-     chinese
+     (chinese           :variables
+                        chinese-enable-fcitx t
+                        chinese-enable-youdao-dict t)
      ;japanese
 
      helm
@@ -717,7 +719,8 @@
 ;;** Mouse Bindings
 
 ;;** Faces, fonts, fontsets
-
+;;*** Monospacify Chinese font
+;(spacemacs//set-monospaced-font "")
 ;;*** Character set & encoding
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8-unix)

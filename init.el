@@ -177,10 +177,12 @@
                                 )
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         leuven
+   dotspacemacs-themes '(
+                         spacemacs-dark
+                         solarized
                          zenburn
+                         leuven
+                         spacemacs-light
                          )
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Source Han Code JP"
@@ -980,6 +982,7 @@
   ) ; with-eval-after-load 'org
 ;;*** TeX
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+(setq tex-default-mode 'japanese-latex-mode)
 (setq TeX-view-program-list
       '(("Okular" "okular %o")
         ("Chrome" "chromium %o")
@@ -1199,6 +1202,13 @@
     (call-interactively 'erc)
     )
   )
+
+(spacemacs|define-custom-layout "TeX"
+  :binding "t"
+  :body
+  (progn
+    (find-file "~/Workspaces/TeX")
+    (neotree-dir "~/Workspaces/TeX")))
 
   (spacemacs|define-custom-layout "Notebook"
   :binding "n"

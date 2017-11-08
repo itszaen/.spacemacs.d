@@ -1225,8 +1225,10 @@
   :body
   (progn
     (defun multi-term-journalctl ()
-      (let((multi-term-dedicated-open "/bin/journalctl")))
-      (multi-term))
+      (interactive)
+      (let((multi-term-program "/bin/journalctl"))
+        (multi-term))
+      )
     (multi-term-journalctl)
     ))
 ;;*** Auto layout

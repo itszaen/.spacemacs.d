@@ -396,7 +396,18 @@
     (define-key neotree-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
     (define-key neotree-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
     )
-
+;;**** Doc-view-mode
+(with-eval-after-load 'pdf-view
+  (define-key pdf-view-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+  (define-key pdf-view-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+  (define-key pdf-view-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+  (define-key pdf-view-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+  (define-key pdf-view-mode-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+  (define-key pdf-view-mode-map (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+  (define-key pdf-view-mode-map (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
+  (define-key pdf-view-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+  (define-key pdf-view-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
+)
 ;;*** Switch window bound to *
   (define-key evil-normal-state-map "0" 'winum-select-window-0)
   (define-key evil-normal-state-map "1" 'winum-select-window-1)
@@ -457,7 +468,18 @@
     (define-key dired-mode-map "8" 'winum-select-window-8)
     (define-key dired-mode-map "9" 'winum-select-window-9)
     )
-
+;;**** Doc-view-mode-map
+  (with-eval-after-load 'pdf-view
+  (define-key pdf-view-mode-map "1" 'winum-select-window-1)
+  (define-key pdf-view-mode-map "2" 'winum-select-window-2)
+  (define-key pdf-view-mode-map "3" 'winum-select-window-3)
+  (define-key pdf-view-mode-map "4" 'winum-select-window-4)
+  (define-key pdf-view-mode-map "5" 'winum-select-window-5)
+  (define-key pdf-view-mode-map "6" 'winum-select-window-6)
+  (define-key pdf-view-mode-map "7" 'winum-select-window-7)
+  (define-key pdf-view-mode-map "8" 'winum-select-window-8)
+  (define-key pdf-view-mode-map "9" 'winum-select-window-9)
+)
 ;;*** Vi/Vim 'o' -> C-return
 (defun newline-without-break-of-line ()
 "move to end of the line and insert newline with index"
@@ -981,14 +1003,22 @@
 
   ) ; with-eval-after-load 'org
 ;;*** TeX
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
-(setq tex-default-mode 'japanese-latex-mode)
+(setq tex-default-mode 'latex-mode)
+(require 'pdf-tools)
 (setq TeX-view-program-list
       '(("Okular" "okular %o")
         ("Chrome" "chromium %o")
-        ("pdf-tools" "TeX-pdf-tools-sync-view")))
+        ("Emacs" TeX-pdf-tools-sync-view)))
 (setq TeX-view-program-selection
-      '((output-pdf "pdf-tools")))
+      '((output-pdf "Emacs")))
+
+(setq tex-start-commands "\\nonstopmode\\input")
+(setq tex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
+(setq latex-run-command "ptex2pdf -u -e -ot '-synctex=1 -interaction=nonstopmode'")
+(setq tex-bibtex-command "latexmk -e '$latex=q/uplatex %O -synctex=1 -interaction=nonstopmode %S/' -e '$bibtex=q/upbibtex %O %B/' -e '$biber=q/biber %O --bblencoding=utf8 -u -U --output_safechars %B/' -e '$makeindex=q/upmendex %O -o %D %S/' -e '$dvipdf=q/dvipdfmx %O -o %D %S/' -norc -gg -pdfdvi")
+(setq tex-print-file-extension ".pdf")
+(setq TeX-PDF-from-DVI "dvipdfmx")
+
 (setq TeX-source-correlate-mode t)
 (setq TeX-source-correlate-start-server t)
 (setq TeX-source-correlate-method 'synctex)
@@ -1126,8 +1156,9 @@
 
 ;;*** Open *.foo in foo-mode
   ;;(add-to-list 'auto-mode-alist '("\\.foo\\'" . foo-mode))
-  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-view-mode))
 
 ;;*** Org-super-zaen-view on startup
 (with-eval-after-load 'org
@@ -1207,8 +1238,8 @@
   :binding "t"
   :body
   (progn
-    (find-file "~/Workspaces/TeX")
-    (neotree-dir "~/Workspaces/TeX")))
+    (find-file "~/Workspace/TeX")
+    (neotree-dir "~/Workspace/TeX")))
 
   (spacemacs|define-custom-layout "Notebook"
   :binding "n"

@@ -89,7 +89,6 @@
                            :nick "zaen"
                            ))
      (org                :variables
-                         org-directory "~/Google Drive/Org"
                          org-imenu-depth 10
                          org-enable-github-support t
                          org-enable-org-journal-support t
@@ -803,6 +802,7 @@
 ;;*** Org
   (with-eval-after-load 'org
 ;;**** Org-mode
+  (setq org-directory "~/Google Drive/Org")
   (setq org-want-todo-bindings t)
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WORKING(o)" "WAITING(w)" "PENDING(p)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
   (setq org-todo-keyword-faces '(("WORKING" . "red")("WAITING" . "yellow")("SOMEDAY" . "gray")("PENDING" . "orange")("CANCELED" . "black")))
@@ -851,19 +851,7 @@
   (setq alert-default-style 'notification)
 
 ;;**** Org-agenda
-  (setq org-agenda-files (list
-                          "~/Google Drive/Org/Routines.org"
-                          "~/Google Drive/Org/TODOs.org"
-                          "~/Google Drive/Org/Projects.org"
-                          "~/Google Drive/Org/Notes.org"
-                          "~/Google Drive/Org/Timetable.org"
-                          "~/Google Drive/Org/Medic.org"
-                          "~/Google Drive/Org/Books.org"
-                          "~/Google Drive/Org/Emacs.org"
-                          "~/Google Drive/Org/Prep.org"
-                          "~/Google Drive/Org/Fun.org"
-                          "~/Google Drive/Org/Study.org"
-                          ))
+  (setq org-agenda-files (list org-directory))
 
   (setq org-agenda-time-grid
         '((daily today require-timed)

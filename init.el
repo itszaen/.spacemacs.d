@@ -104,6 +104,7 @@
 ;;** Packages
    dotspacemacs-additional-packages
    '(
+     image+
      ac-php
      mozc
      ac-mozc

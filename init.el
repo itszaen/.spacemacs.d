@@ -396,7 +396,7 @@
     (define-key neotree-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
     (define-key neotree-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
     )
-;;**** Doc-view-mode
+;;**** pdf-view-mode-map
 (with-eval-after-load 'pdf-view
   (define-key pdf-view-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
   (define-key pdf-view-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
@@ -407,7 +407,20 @@
   (define-key pdf-view-mode-map (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
   (define-key pdf-view-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
   (define-key pdf-view-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
-)
+  )
+;;**** Image-mode-map
+(with-eval-after-load 'image-mode
+  (define-key image-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+  (define-key image-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+  (define-key image-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+  (define-key image-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+  (define-key image-mode-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+  (define-key image-mode-map (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+  (define-key image-mode-map (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
+  (define-key image-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+  (define-key image-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
+  )
+
 ;;*** Switch window bound to *
   (define-key evil-normal-state-map "0" 'winum-select-window-0)
   (define-key evil-normal-state-map "1" 'winum-select-window-1)
@@ -468,7 +481,7 @@
     (define-key dired-mode-map "8" 'winum-select-window-8)
     (define-key dired-mode-map "9" 'winum-select-window-9)
     )
-;;**** Doc-view-mode-map
+;;**** pdf-view-mode-map
   (with-eval-after-load 'pdf-view
   (define-key pdf-view-mode-map "1" 'winum-select-window-1)
   (define-key pdf-view-mode-map "2" 'winum-select-window-2)
@@ -479,7 +492,19 @@
   (define-key pdf-view-mode-map "7" 'winum-select-window-7)
   (define-key pdf-view-mode-map "8" 'winum-select-window-8)
   (define-key pdf-view-mode-map "9" 'winum-select-window-9)
-)
+  )
+;;**** image-mode-map
+(with-eval-after-load 'image-mode
+  (define-key image-mode-map "1" 'winum-select-window-1)
+  (define-key image-mode-map "2" 'winum-select-window-2)
+  (define-key image-mode-map "3" 'winum-select-window-3)
+  (define-key image-mode-map "4" 'winum-select-window-4)
+  (define-key image-mode-map "5" 'winum-select-window-5)
+  (define-key image-mode-map "6" 'winum-select-window-6)
+  (define-key image-mode-map "7" 'winum-select-window-7)
+  (define-key image-mode-map "8" 'winum-select-window-8)
+  (define-key image-mode-map "9" 'winum-select-window-9)
+  )
 ;;*** Vi/Vim 'o' -> C-return
 (defun newline-without-break-of-line ()
 "move to end of the line and insert newline with index"

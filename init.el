@@ -114,6 +114,7 @@
      yascroll
      google-maps
      plantuml-mode
+     gh
 
      org-web-tools
      ;org-mouse

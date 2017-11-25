@@ -261,6 +261,7 @@
 (defun dotspacemacs/user-config ()
   (if (file-readable-p "~/.spacemacs.d/user-config.el") (load "~/.spacemacs.d/user-config.el"))
   )
+
 ;;* Emacs-custom-settings
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.

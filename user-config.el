@@ -16,4 +16,4 @@
 
 (if (file-readable-p "~/.spacemacs.d/config-diminish.el")    (load "~/.spacemacs.d/config-diminish.el"))
 
-(if (file-readable-p "~/.spacemacs.d-config-layout.el")      (load "~/.spacemacs.d/config-layout.el"))
+(if (file-readable-p "~/.spacemacs.d/config-layout.el")      (load "~/.spacemacs.d/config-layout.el"))

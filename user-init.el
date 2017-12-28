@@ -1,8 +1,14 @@
 ;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
 ;; -*- #+STARTUP: content -*-
 
+;;** Define where the emacs-custom-settings file would be
+(if (file-readable-p "~/.spacemacs.d/emacs-custom-settings.el")
+    (setq custom-file "~/.spacemacs.d/emacs-custom-settings.el")
+  (load custom-file)
+    )
 
 ;;** Components
+
 
 ;;*** Mu4e
   (setq

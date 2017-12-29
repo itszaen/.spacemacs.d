@@ -102,6 +102,7 @@
      mozc
      ac-mozc
      multi-term
+     multifiles
      emms
      gitter
      cnfonts

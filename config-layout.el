@@ -24,7 +24,7 @@
   :binding "n"
   :body
   (progn
-    (find-file "~/Google Drive/Notebooks/notebook.txt")
+    (find-file "~/GoogleDrive/Notebooks/notebook.txt")
     (org-mode)
     (neotree-show)
   	)

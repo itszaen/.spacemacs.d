@@ -71,10 +71,10 @@
 
     (split-window-right)
     (other-window 1)
-    (find-file "~/Google Drive/Org/TODOs.org")
+    (find-file "~/GoogleDrive/Org/TODOs.org")
     (split-window-below)
     (other-window 1)
-    (find-file "~/Google Drive/Org/Projects.org")
+    (find-file "~/GoogleDrive/Org/Projects.org")
     )
 ;(org-super-zaen-view-startup)
 

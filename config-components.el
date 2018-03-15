@@ -38,7 +38,7 @@
 
 ;;*** Deft     Note taking mode
   (setq deft-extensions '("org" "md" "txt"))         ; add more to recognize more file formats.
-  (setq deft-directory "~/Google Drive/Org/Notes")
+  (setq deft-directory "~/GoogleDrive/Org/Notes")
 
 
 ;;*** Twitter

@@ -1,7 +1,7 @@
 ;;*** Org
   (with-eval-after-load 'org
 ;;**** Org-mode
-  (setq org-directory "~/Google Drive/Org")
+  (setq org-directory "~/GoogleDrive/Org")
   (setq org-want-todo-bindings t)
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WORKING(o)" "WAITING(w)" "PENDING(p)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELED(c)")))
   (setq org-todo-keyword-faces '(("WORKING" . "red")("WAITING" . "yellow")("SOMEDAY" . "gray")("PENDING" . "orange")("CANCELED" . "black")))
@@ -13,7 +13,7 @@
   (setq org-startup-folded 'content)
   (setq org-use-speed-commands t)
   (setq org-pretty-entities t)
-  (setq org-archive-location "~/Google Drive/Org/Archive.org::")
+  (setq org-archive-location "~/GoogleDrive/Org/Archive.org::")
   (setq org-bullets-bullet-list '("■" "◆" "▲" "▶"))
 
 ;;**** Org-clock
@@ -21,28 +21,28 @@
   (setq org-clock-persist 'history)
 
 ;;**** Org-journal
-  (setq org-journal-dir "~/Google Drive/Org/Journal/")
+  (setq org-journal-dir "~/GoogleDrive/Org/Journal/")
   (setq org-journal-file-format "%F")
 
 ;;**** Org-projectile
   ;(use-package org-projectile)
-  ;(setq org-projectile-file "~/Google Drive/Org/Projects.org")
+  ;(setq org-projectile-file "~/GoogleDrive/Org/Projects.org")
 
 ;;**** Org-capture
   (setq org-capture-templates
-          '(("t" "Task" entry (file+headline "~/Google Drive/Org/TODOs.org" "Tasks")
+          '(("t" "Task" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Tasks")
              "** TODO %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))\n %^{Effort}p \n")
-            ("m" "Meeting" entry (file+headline "~/Google Drive/Org/TODOs.org" "Meetings")
+            ("m" "Meeting" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Meetings")
              "** TODO %?\n %u\n %a %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"today\"))")
-            ("j" "Journal" entry (file+datetree "~/Google Drive/Org/Journal.org")
+            ("j" "Journal" entry (file+datetree "~/GoogleDrive/Org/Journal.org")
              "** %?\nEntered on %U\n  %i\n  %a")
-            ("P" "pull-request-review" entry (file+headline "~/Google Drive/Org/TODOs.org" "Pull Requests")
+            ("P" "pull-request-review" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Pull Requests")
              "** TODO %a %? :pr:\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+1d\"))")
-            ("p" "process-soon" entry (file+headline "~/Google Drive/Org/TODOs.org" "Email")
+            ("p" "process-soon" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Email")
              "** TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))")
-            ("w" "wait-for-reply" entry (file+headline "~/Google Drive/Org/TODOs.org" "Email")
+            ("w" "wait-for-reply" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Email")
              "** WAITING %u %a %?\n")
-            ("r" "redmine-issue" entry (file+headline "~/Google Drive/Org/TODOs.org" "Redmine Issue")
+            ("r" "redmine-issue" entry (file+headline "~/GoogleDrive/Org/TODOs.org" "Redmine Issue")
              "** TODO %a %?\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))")
             ))
 

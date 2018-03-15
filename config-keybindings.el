@@ -177,6 +177,8 @@
 (global-set-key [(meta up)] 'move-text-line-up)
 (global-set-key [(meta down)] 'move-text-line-down)
 
+;;*** Multifiles
+(global-set-key (kbd "C-!") 'mf/mirror-region-in-multifile)
 
 ;;*** Multiply current line below
 (defun Multiply-line-below ()
@@ -211,10 +213,10 @@
   (spacemacs/toggle-maximize-buffer)
   (split-window-right)
   (other-window 1)
-  (find-file "~/Google Drive/Org/TODOs.org")
+  (find-file "~/GoogleDrive/Org/TODOs.org")
   (split-window-below)
   (other-window 1)
-  (find-file "~/Google Drive/Org/Projects.org")
+  (find-file "~/GoogleDrive/Org/Projects.org")
   )
 (spacemacs/set-leader-keys (kbd "SPC o A") 'Org-Agenda-Setup)
 ;;*** Org-TODO files

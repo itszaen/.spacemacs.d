@@ -86,7 +86,7 @@
                          org-imenu-depth 10
                          org-enable-github-support t
                          org-enable-org-journal-support t
-                         org-default-notes-file (concat "~/Google Drive/Org/Notes.org")
+                         org-default-notes-file (concat "~/GoogleDrive/Org/Notes.org")
                          org-enable-bootstrap-support t
                          org-enable-reveal-js-support t
                          )

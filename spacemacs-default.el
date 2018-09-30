@@ -17,15 +17,15 @@
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes '(
-                         spacemacs-light
                          spacemacs-dark
+                         spacemacs-light
                          solarized
                          zenburn
                          leuven
                          )
    dotspacemacs-colorize-cursor-according-to-state t
-   dotspacemacs-default-font '("Source Han Code JP"
-                               :size 12
+   dotspacemacs-default-font '("Inconsolata"
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.2)

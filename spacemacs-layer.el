@@ -49,6 +49,7 @@
      (wakatime           :variables
                          wakatime-api-key "2db0c3a9-0164-447c-83ed-57bde0304722"
                          wakatime-cli-path "/usr/bin/wakatime")
+     themes-megapack
     )
 ;;** Packages
    dotspacemacs-additional-packages

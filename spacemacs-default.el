@@ -17,6 +17,7 @@
    dotspacemacs-startup-buffer-responsive t
    dotspacemacs-scratch-mode 'text-mode
    dotspacemacs-themes '(
+                         cyberpunk
                          spacemacs-dark
                          spacemacs-light
                          solarized
@@ -25,10 +26,10 @@
                          )
    dotspacemacs-colorize-cursor-according-to-state t
    dotspacemacs-default-font '("Inconsolata"
-                               :size 15
+                               :size 18
                                :weight normal
                                :width normal
-                               :powerline-scale 1.2)
+                               :powerline-scale 1.1)
 
    dotspacemacs-leader-key "SPC"
    dotspacemacs-emacs-command-key "SPC"
